@@ -8,6 +8,9 @@ import Exercises from "./pages/Exercises";
 import TopUsers from "./pages/TopUsers";
 import ListExercise from "./pages/ListExercise";
 import DetailExercise from "./pages/DetailExercicse";
+import Test from "./pages/Test";
+import Login from "./pages/User/Login";
+import Register from "./pages/User/Register";
 function App() {
   return (
     <>
@@ -18,6 +21,10 @@ function App() {
             <Route path="exercises" element={<Exercises />} />
             <Route path="top-users" element={<TopUsers />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="test" element={<Test />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+
             <Route path="exercises/short-stories" element={<ListExercise />} />
             <Route
               path="/exercises/english-conversations/1-at-home-1.399/listen-and-type"

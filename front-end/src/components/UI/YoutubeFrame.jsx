@@ -1,4 +1,5 @@
-const YoutubeFrame = ({ sizeVideo }) => {
+import { useEffect, useRef } from "react";
+const YoutubeFrame = () => {
   return (
     <>
       <div
