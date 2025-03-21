@@ -14,7 +14,7 @@ public class Progress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long progressId;
 
     private int lessonStatus;
     private int attempts;
