@@ -19,7 +19,10 @@ public class Comment {
     @Column(nullable = false)
     private String content;
 
+    @Column(name = "`like`")
     private int like;
+
+    @Column(name = "`dislike`")
     private int dislike;
 
     @Column(nullable = false)
