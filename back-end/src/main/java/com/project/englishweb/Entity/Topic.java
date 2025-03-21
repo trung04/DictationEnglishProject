@@ -25,6 +25,6 @@ public class Topic {
     @Column(columnDefinition = "TEXT")
     private String detail;
 
-    @OneToMany(mappedBy = "Topic", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lesson> lessons;
 }
