@@ -28,4 +28,28 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
+    public String getUrl() {
+        return url;
+    }
+    
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    
+    public String getAnswer() {
+        return answer;
+    }
+    
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+    
+    public Lesson getLesson() {
+        return lesson;
+    }
+    
+    public void setLesson(Lesson lesson) {
+        this.lesson = lesson;
+    }
+    
 }
