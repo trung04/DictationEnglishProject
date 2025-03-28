@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Topic {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long topicId;
@@ -27,4 +28,28 @@ public class Topic {
 
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lesson> lessons;
+    public String getTitle() {
+        return title;
+    }
+    
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
+    public String getLevel() {
+        return level;
+    }
+    
+    public void setLevel(String level) {
+        this.level = level;
+    }
+    
+    public String getDetail() {
+        return detail;
+    }
+    
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }    
+
 }

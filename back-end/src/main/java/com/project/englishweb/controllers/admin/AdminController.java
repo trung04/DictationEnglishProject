@@ -5,12 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class AdminController {
-    @GetMapping("/index")
+
+    @GetMapping("/admin/index")
     public String home() {
-        return "index";
+        return "admin/home"; // Trả về templates/admin/home.html
     }
+
     @GetMapping("/layout")
-    public String layout(){
-        return "layout/layout";
+    public String layout() {
+        return "layout/layout"; // Trả về templates/layout/layout.html
     }
 }
