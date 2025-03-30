@@ -1,7 +1,7 @@
 package com.project.englishweb.controllers.user;
 
 import com.project.englishweb.Entity.User;
-import com.project.englishweb.services.UserService;
+import com.project.englishweb.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

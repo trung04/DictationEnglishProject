@@ -1,7 +1,7 @@
-package com.project.englishweb.services;
+package com.project.englishweb.Service;
 
 import com.project.englishweb.Entity.User;
-import com.project.englishweb.repositories.UserRepository;
+import com.project.englishweb.Repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
