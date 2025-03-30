@@ -1,7 +1,7 @@
-package com.project.englishweb.services;
+package com.project.englishweb.Service;
 
 import com.project.englishweb.Entity.Topic;
-import com.project.englishweb.repositories.*;
+import com.project.englishweb.Repository.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

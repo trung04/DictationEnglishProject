@@ -1,4 +1,4 @@
-package com.project.englishweb.controllers.user;
+package com.project.englishweb.Controller.user;
 
 import com.project.englishweb.Entity.User;
 import com.project.englishweb.Service.UserService;

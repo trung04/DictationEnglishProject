@@ -1,7 +1,8 @@
-package com.project.englishweb.controllers;
+package com.project.englishweb.Controller;
 
 import com.project.englishweb.Entity.Topic;
-import com.project.englishweb.services.TopicService;
+import com.project.englishweb.Service.TopicService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

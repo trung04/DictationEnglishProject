@@ -1,4 +1,4 @@
-package com.project.englishweb.Controllers;
+package com.project.englishweb.Controller;
 
 import com.project.englishweb.Entity.Note;
 import com.project.englishweb.DTO.NoteDTO;

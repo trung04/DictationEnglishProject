@@ -1,4 +1,4 @@
-package com.project.englishweb.repositories;
+package com.project.englishweb.Repository;
 
 import com.project.englishweb.Entity.Topic;
 import org.springframework.data.jpa.repository.JpaRepository;
