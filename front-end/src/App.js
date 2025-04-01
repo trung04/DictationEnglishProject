@@ -11,6 +11,8 @@ import DetailExercise from "./pages/DetailExercicse";
 import Test from "./pages/Test";
 import Login from "./pages/User/Login";
 import Register from "./pages/User/Register";
+import UserProfile from "./pages/User/UserProfile";
+import ChangePassword from "./pages/User/ChangePassword";
 function App() {
   return (
     <>
@@ -24,6 +26,8 @@ function App() {
             <Route path="test" element={<Test />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
+            <Route path="user/profile" element={<UserProfile />} />
+            <Route path="user/change-password" element={<ChangePassword />} />
 
             <Route path="exercises/short-stories" element={<ListExercise />} />
             <Route
