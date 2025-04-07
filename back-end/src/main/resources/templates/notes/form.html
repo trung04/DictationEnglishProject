@@ -1,124 +1,46 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 <head>
     <title>Note</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
-            margin: 0;
-            padding: 0;
-        }
-
-        div {
-            max-width: 400px; /* nhỏ hơn */
-            margin: 50px auto;
-            background-color: #ffffff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            color: #333333;
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        input[type="number"],
-        textarea {
-            font-family: Arial, sans-serif;
-            font-size: 20px;
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-
-        textarea {
-            resize: vertical;
-            height: 100px;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        a.cancel-link {
-            padding: 8px 16px;
-            text-decoration: none;
-            background-color: #6c757d;
-            color: white;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        a.cancel-link:hover {
-            background-color: #5a6268;
-        }
-    </style>
 </head>
 <body>
-<div>
-    <h1 th:text="${note.noteId == null ? 'Create Note' : 'Edit Note'}"></h1>
-
-    <form action="/notes/save" method="post" th:object="${note}" class="form">
-        <div class="form-group" th:if="${note.noteId != null}">
-            <label for="noteId">Note ID:</label>
-            <input type="number" th:field="*{noteId}" id="noteId" readonly/>
+<section layout:fragment="content">
+    <div class="box box-primary" style="max-width: 600px;">
+        <div class="box-header with-border">
+            <h3 th:text="${note.noteId == null ? 'Create Note' : 'Edit Note'}"></h3>
         </div>
 
-        <div class="form-group">
-            <label for="content">Add a new note:</label>
-            <textarea th:field="*{content}" id="content" required></textarea>
-        </div>
+        <form action="/notes/save" method="post" th:object="${note}" role="form">
+                <div class="box-body">
+                    <div class="form-group" th:if="${note.noteId != null}">
+                        <label for="noteId">Note ID:</label>
+                        <input type="number" th:field="*{noteId}" class="form-control" id="noteId" readonly/>
+                    </div>
 
-        <div class="form-group">
-            <label for="userId">User ID:</label>
-            <input type="number" th:field="*{userId}" id="userId" min="1" required />
-        </div>
+                    <div class="form-group">
+                        <label for="content">Add a new note:</label>
+                        <textarea th:field="*{content}" class="form-control" id="content" required></textarea>
+                    </div>
 
-        <div class="form-group">
-            <label for="lessonId">Lesson ID:</label>
-            <input type="number" th:field="*{lessonId}" id="lessonId" min="1" required />
-        </div>
+                    <div class="form-group">
+                        <label for="userId">User ID:</label>
+                        <input type="number" th:field="*{userId}" class="form-control" id="userId" min="1" required />
+                    </div>
 
-        <div class="form-actions">
-            <button type="submit">Save</button>
-            <a href="/notes" class="cancel-link">Cancel</a>
-        </div>
-    </form>
-</div>
+                    <div class="form-group">
+                        <label for="lessonId">Lesson ID:</label>
+                        <input type="number" th:field="*{lessonId}" class="form-control" id="lessonId" min="1" required />
+                    </div>
+                </div>
+
+            <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="/notes" class="btn btn-default">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
 </body>
 </html>
