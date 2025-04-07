@@ -8,6 +8,8 @@ import com.project.englishweb.Repository.QuestionRepository;
 import com.project.englishweb.Repository.UserRepository;
 import com.project.englishweb.DTO.CommentDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,11 +42,11 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.save(comment);
     }
 
-    @Override
-    public List<Comment> getAllComments() {
-        return commentRepository.findAll();
-    }
 
+    @Override
+    public Page<Comment> getAllComments(Pageable pageable) {
+        return commentRepository.findAll(pageable);
+    }
     @Override
     public Comment getCommentById(Long id) {
         return commentRepository.findById(id)

@@ -4,64 +4,71 @@ import com.project.englishweb.DTO.CommentDTO;
 import com.project.englishweb.Entity.Comment;
 import com.project.englishweb.Service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/comments")
+@Controller
+@RequestMapping("/comments")
 @RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping
-    public ResponseEntity<Comment> createComment(@RequestBody CommentDTO commentDTO) {
-        return ResponseEntity.ok(commentService.createComment(commentDTO));
-    }
-
     @GetMapping
-    public ResponseEntity<List<Comment>> getAllComments() {
-        return ResponseEntity.ok(commentService.getAllComments());
+    public String manageComments(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(required = false) String action,
+                                 @RequestParam(required = false) Long id,
+                                 Model model) {
+        if ("new".equals(action)) {
+            model.addAttribute("commentDTO", new CommentDTO());
+            model.addAttribute("action", "new");
+            model.addAttribute("activePage", "comments");
+            return "comments/manage";
+        }
+
+        if (id != null) {
+            Comment comment = commentService.getCommentById(id);
+            CommentDTO commentDTO = new CommentDTO();
+            commentDTO.setContent(comment.getContent());
+            commentDTO.setQuestionId(comment.getQuestion().getQuestionId());
+            commentDTO.setUserId(comment.getUser().getUserId());
+            commentDTO.setLike(comment.getLike());
+            commentDTO.setDislike(comment.getDislike());
+            model.addAttribute("commentDTO", commentDTO);
+            model.addAttribute("commentId", id);
+            model.addAttribute("activePage", "comments");
+            return "comments/manage";
+        }
+
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Comment> commentsPage = commentService.getAllComments(pageable);
+
+        model.addAttribute("comments", commentsPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", commentsPage.getTotalPages());
+        model.addAttribute("activePage", "comments");
+        return "comments/manage";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Comment> getCommentById(@PathVariable Long id) {
-        return ResponseEntity.ok(commentService.getCommentById(id));
+    @PostMapping
+    public String createComment(@ModelAttribute CommentDTO commentDTO) {
+        commentService.createComment(commentDTO);
+        return "redirect:/comments";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody CommentDTO commentDTO) {
-        return ResponseEntity.ok(commentService.updateComment(id, commentDTO));
+    @PostMapping("/update/{id}")
+    public String updateComment(@PathVariable Long id, @ModelAttribute CommentDTO commentDTO) {
+        commentService.updateComment(id, commentDTO);
+        return "redirect:/comments";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
+    @GetMapping("/delete/{id}")
+    public String deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/question/{questionId}")
-    public ResponseEntity<List<Comment>> getCommentsByQuestionId(@PathVariable Long questionId) {
-        return ResponseEntity.ok(commentService.getCommentsByQuestionId(questionId));
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Comment>> getCommentsByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(commentService.getCommentsByUserId(userId));
-    }
-    @GetMapping("/question/{questionId}/newest")
-    public ResponseEntity<List<Comment>> getCommentsByQuestionIdOrderBySubmittedAtDesc(@PathVariable Long questionId) {
-        return ResponseEntity.ok(commentService.getCommentsByQuestionIdOrderBySubmittedAtDesc(questionId));
-    }
-    @GetMapping("/question/{questionId}/like")
-    public ResponseEntity<List<Comment>> getCommentsByQuestionIdOrderByLikeDesc(@PathVariable Long questionId) {
-        return ResponseEntity.ok(commentService.getCommentsByQuestionIdOrderByLikeDesc(questionId));
-    }
-
-    @GetMapping("/question/{questionId}/dislike")
-    public ResponseEntity<List<Comment>> getCommentsByQuestionIdOrderByDislikeDesc(@PathVariable Long questionId) {
-        return ResponseEntity.ok(commentService.getCommentsByQuestionIdOrderByDislikeDesc(questionId));
+        return "redirect:/comments";
     }
 }

@@ -6,6 +6,8 @@ import com.project.englishweb.Repository.LessonRepository;
 import com.project.englishweb.Repository.TopicRepository;
 import com.project.englishweb.DTO.LessonDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +37,11 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public List<Lesson> getAllLessons() {
         return lessonRepository.findAll();
+    }
+
+    @Override
+    public Page<Lesson> getAllLessons(Pageable pageable) {
+        return lessonRepository.findAll(pageable); // Sử dụng phương thức findAll có Pageable
     }
 
     @Override
@@ -76,7 +83,7 @@ public class LessonServiceImpl implements LessonService {
         return lessonRepository.findByTitle(title);
     }
     @Override
-    public List<Lesson> getLessonsByTitleAndLevel(String title, String level) {
-        return lessonRepository.findByTitleAndLevel(title, level);
+    public Page<Lesson> searchLessons(String title, String level, Long topicId, Pageable pageable) {
+        return lessonRepository.findByTitleAndLevelAndTopicIdWithSearch(title, level, topicId, pageable); // Gọi phương thức repository mới
     }
 }

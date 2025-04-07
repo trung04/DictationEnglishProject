@@ -61,6 +61,29 @@
             </span>
                 </a>
             </li>
+             <!-- them lesson va comment -->
+            <li class="treeview" th:classappend="${activePage == 'lessons'} ? 'active menu-open'">
+                <a href="#">
+                    <i class="fa fa-book"></i> <span>Lesson</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li th:classappend="${activePage == 'lessons'} ? 'active'">
+                        <a th:href="@{/lessons}"><i class="fa fa-circle-o"></i> All Lessons</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview" th:classappend="${activePage == 'comments'} ? 'active menu-open'">
+                <a href="#">
+                    <i class="fa fa-comments"></i> <span>Comment</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li th:classappend="${activePage == 'comments'} ? 'active'">
+                        <a th:href="@{/comments}"><i class="fa fa-circle-o"></i> All Comments</a>
+                    </li>
+                </ul>
+            </li>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-pie-chart"></i>

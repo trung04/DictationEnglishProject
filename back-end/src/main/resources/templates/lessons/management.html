@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>Lesson Management</title>
+</head>
+<body>
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>Lesson Management</h1>
+    </section>
+    <section class="content" layout:fragment="content">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title" th:if="${editLessonId == null}">Lesson List</h3>
+                <h3 class="box-title" th:if="${editLessonId != null}">Edit Lesson</h3>
+                <div class="box-tools pull-right">
+                    <button id="showCreateFormBtn" class="btn btn-success btn-sm"
+                            onclick="document.getElementById('createLessonFormContainer').style.display='block'; this.style.display='none';"
+                            th:if="${editLessonId == null}">
+                        Create New Lesson
+                    </button>
+                    <a th:if="${editLessonId != null}" th:href="@{/lessons}" class="btn btn-default btn-sm">Back to List</a>
+                </div>
+            </div>
+            <div class="box-body">
+                <!-- CREATE FORM -->
+                <div id="createLessonFormContainer" style="display: none;" th:if="${editLessonId == null}">
+                    <h3>Create New Lesson</h3>
+                    <form role="form" th:action="@{/lessons}" method="post" th:object="${lessonDTO}">
+                        <div class="form-group">
+                            <label for="createTitle">Title</label>
+                            <input type="text" class="form-control" id="createTitle" th:field="*{title}" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="createLevel">Level</label>
+                            <input type="text" class="form-control" id="createLevel" th:field="*{level}" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="createURL">URL</label>
+                            <input type="text" class="form-control" id="createURL" th:field="*{URL}" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="createTopicId">Topic ID</label>
+                            <input type="number" class="form-control" id="createTopicId" th:field="*{topicId}" required/>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Lesson</button>
+                        <button type="button" class="btn btn-default"
+                                onclick="document.getElementById('createLessonFormContainer').style.display='none'; document.getElementById('showCreateFormBtn').style.display='inline-block';">
+                            Cancel
+                        </button>
+                    </form>
+                </div>
+
+                <!-- EDIT FORM -->
+                <div th:if="${editLessonId != null}">
+                    <h3>Edit Lesson</h3>
+                    <form role="form" th:action="@{/lessons/update/{id}(id=${editLessonId})}" method="post" th:object="${editLessonDTO}">
+                        <div class="form-group">
+                            <label for="editTitle">Title</label>
+                            <input type="text" class="form-control" id="editTitle" th:field="*{title}" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="editLevel">Level</label>
+                            <input type="text" class="form-control" id="editLevel" th:field="*{level}" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="editURL">URL</label>
+                            <input type="text" class="form-control" id="editURL" th:field="*{URL}" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTopicId">Topic ID</label>
+                            <input type="number" class="form-control" id="editTopicId" th:field="*{topicId}" required/>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Lesson</button>
+                        <a th:href="@{/lessons}" class="btn btn-default">Cancel</a>
+                    </form>
+                </div>
+
+                <!-- LESSON LIST -->
+                <div th:if="${editLessonId == null}">
+                    <form method="get" th:action="@{/lessons}" class="search-form">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label for="searchTitle" class="mr-2">Title:</label>
+                                <input type="text" class="form-control form-control-sm" id="searchTitle" name="title" th:value="${searchTitle}">
+                            </div>
+                            <div class="form-group">
+                                <label for="searchLevel" class="mr-2">Level:</label>
+                                <input type="text" class="form-control form-control-sm" id="searchLevel" name="level" th:value="${searchLevel}">
+                            </div>
+                            <div class="form-group">
+                                <label for="searchTopicId" class="mr-2">Topic ID:</label>
+                                <input type="number" class="form-control form-control-sm" id="searchTopicId" name="topicId" th:value="${searchTopicId}">
+                            </div>
+                            <button type="submit" class="btn btn-success btn-sm">Search</button>
+                        </div>
+                    </form>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Level</th>
+                            <th>URL</th>
+                            <th>TopicId</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="lesson : ${lessons.content}">
+                            <td th:text="${lesson.title}"></td>
+                            <td th:text="${lesson.level}"></td>
+                            <td><a th:href="${lesson.URL}" th:text="${lesson.URL}" target="_blank"></a></td>
+                            <td th:text="${lesson.topic.topicId}"></td>
+                            <td>
+                                <a th:href="@{/lessons(editId=${lesson.lessonId})}" class="btn btn-warning btn-sm">Edit</a>
+                                <a th:href="@{/lessons/delete/{id}(id=${lesson.lessonId})}" class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Are you sure?')">Delete</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="box-footer clearfix">
+                        <ul class="pagination pagination-sm no-margin pull-right">
+                            <li th:if="${currentPage > 0}">
+                                <a th:href="@{/lessons(page=${currentPage - 1}, title=${searchTitle}, level=${searchLevel}, topicId=${searchTopicId})}">&laquo;</a>
+                            </li>
+                            <li th:each="page : ${#numbers.sequence(0, totalPages - 1)}"
+                                th:class="${currentPage == page ? 'active' : ''}">
+                                <a th:href="@{/lessons(page=${page}, title=${searchTitle}, level=${searchLevel}, topicId=${searchTopicId})}" th:text="${page + 1}"></a>
+                            </li>
+                            <li th:if="${currentPage < totalPages - 1}">
+                                <a th:href="@{/lessons(page=${currentPage + 1}, title=${searchTitle}, level=${searchLevel}, topicId=${searchTopicId})}">&raquo;</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>
