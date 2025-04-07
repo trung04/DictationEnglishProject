@@ -1,58 +1,83 @@
 package com.project.englishweb.Service;
 
+import com.project.englishweb.DTO.NoteDTO;
 import com.project.englishweb.Entity.Lesson;
 import com.project.englishweb.Entity.Note;
 import com.project.englishweb.Entity.User;
+import com.project.englishweb.Mapper.NoteMapper;
 import com.project.englishweb.Repository.LessonRepository;
 import com.project.englishweb.Repository.NoteRepository;
 import com.project.englishweb.Repository.UserRepository;
-import com.project.englishweb.DTO.NoteDTO;
-import lombok.RequiredArgsConstructor;
+import com.project.englishweb.Service.NoteService;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class NoteServiceImpl implements NoteService {
 
-    private final NoteRepository noteRepository;
-    private final UserRepository userRepository;
-    private final LessonRepository lessonRepository;
+    @Autowired
+    private NoteRepository noteRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private LessonRepository lessonRepository;
+
+    @Autowired
+    private NoteMapper noteMapper;
 
     @Override
-    public Note createNote(NoteDTO noteDTO) {
-        User user = userRepository.findById(noteDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-        Lesson lesson = lessonRepository.findById(noteDTO.getLessonId()).orElseThrow(() -> new RuntimeException("Lesson not found"));
-
-        Note note = new Note();
-        note.setNote(noteDTO.getNote());
-        note.setUser(user);
-        note.setLesson(lesson);
-
-        return noteRepository.save(note);
+    public List<NoteDTO> getAllNotes() {
+        return noteRepository.findAll()
+                .stream()
+                .map(noteMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Note> getAllNotes() {
-        return noteRepository.findAll();
+    public NoteDTO getNoteById(Long id) {
+        Note note = noteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Note not found with ID: " + id));
+        return noteMapper.toDTO(note);
     }
 
     @Override
-    public Note getNoteById(Long id) {
-        return noteRepository.findById(id).orElseThrow(() -> new RuntimeException("Note not found"));
+    public NoteDTO createNote(NoteDTO dto) {
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + dto.getUserId()));
+        Lesson lesson = lessonRepository.findById(dto.getLessonId())
+                .orElseThrow(() -> new EntityNotFoundException("Lesson not found with ID: " + dto.getLessonId()));
+        Note note = noteMapper.toEntity(dto, user, lesson);
+        return noteMapper.toDTO(noteRepository.save(note));
     }
 
     @Override
-    public Note updateNote(Long id, NoteDTO noteDTO) {
-        Note note = getNoteById(id);
-        note.setNote(noteDTO.getNote());
-        return noteRepository.save(note);
+    public NoteDTO updateNote(Long id, NoteDTO dto) {
+        Note existing = noteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Note not found with ID: " + id));
+
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + dto.getUserId()));
+        Lesson lesson = lessonRepository.findById(dto.getLessonId())
+                .orElseThrow(() -> new EntityNotFoundException("Lesson not found with ID: " + dto.getLessonId()));
+
+        existing.setContent(dto.getContent());
+        existing.setUser(user);
+        existing.setLesson(lesson);
+
+        return noteMapper.toDTO(noteRepository.save(existing));
     }
 
     @Override
     public void deleteNote(Long id) {
+        if (!noteRepository.existsById(id)) {
+            throw new EntityNotFoundException("Note not found with ID: " + id);
+        }
         noteRepository.deleteById(id);
     }
 }

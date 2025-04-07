@@ -1,12 +1,15 @@
 package com.project.englishweb.DTO;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class NoteDTO {
-    private String note;
+    private Long noteId;
+    private String content;
     private Long userId;
     private Long lessonId;
 }

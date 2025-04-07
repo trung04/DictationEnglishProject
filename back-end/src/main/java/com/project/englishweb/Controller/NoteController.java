@@ -1,44 +1,50 @@
 package com.project.englishweb.Controller;
 
-import com.project.englishweb.Entity.Note;
 import com.project.englishweb.DTO.NoteDTO;
 import com.project.englishweb.Service.NoteService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/notes")
-@RequiredArgsConstructor
+@Controller
+@RequestMapping("/notes")
 public class NoteController {
 
-    private final NoteService noteService;
-
-    @PostMapping
-    public ResponseEntity<Note> createNote(@RequestBody NoteDTO noteDTO) {
-        return ResponseEntity.ok(noteService.createNote(noteDTO));
-    }
+    @Autowired
+    private NoteService noteService;
 
     @GetMapping
-    public ResponseEntity<List<Note>> getAllNotes() {
-        return ResponseEntity.ok(noteService.getAllNotes());
+    public String listNotes(Model model) {
+        model.addAttribute("notes", noteService.getAllNotes());
+        return "notes/list";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Note> getNoteById(@PathVariable Long id) {
-        return ResponseEntity.ok(noteService.getNoteById(id));
+    @GetMapping("/create")
+    public String showCreateForm(Model model) {
+        model.addAttribute("note", new NoteDTO());
+        return "notes/form";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Note> updateNote(@PathVariable Long id, @RequestBody NoteDTO noteDTO) {
-        return ResponseEntity.ok(noteService.updateNote(id, noteDTO));
+    @PostMapping("/save")
+    public String saveNote(@ModelAttribute("note") NoteDTO note) {
+        if (note.getNoteId() == null) {
+            noteService.createNote(note);
+        } else {
+            noteService.updateNote(note.getNoteId(), note);
+        }
+        return "redirect:/notes";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteNote(@PathVariable Long id) {
+    @GetMapping("/edit/{id}")
+    public String editNote(@PathVariable Long id, Model model) {
+        model.addAttribute("note", noteService.getNoteById(id));
+        return "notes/form";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteNote(@PathVariable Long id) {
         noteService.deleteNote(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/notes";
     }
 }

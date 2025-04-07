@@ -16,7 +16,7 @@ public class Note {
     private Long noteId;
 
     @Column(nullable = false)
-    private String note;
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
@@ -25,5 +25,6 @@ public class Note {
     @ManyToOne
     @JoinColumn(name = "lessonId", nullable = false)
     private Lesson lesson;
+
 }
 
