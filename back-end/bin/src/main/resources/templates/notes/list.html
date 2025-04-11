@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>Notes List</title>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Notes Lists</h3>
+            <div class="box-tools pull-right">
+                <a href="/notes/create" class="btn btn-primary">Create Note</a>
+            </div>
+        </div>
+        <div class="box-body">
+            <div>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Note Content</th>
+                        <th>User ID</th>
+                        <th>Lesson ID</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="note : ${notes}">
+                        <td th:text="${note.noteId}"></td>
+                        <td th:text="${note.content}"></td>
+                        <td th:text="${note.userId}"></td>
+                        <td th:text="${note.lessonId}"></td>
+                        <td>
+                            <a th:href="@{/notes/edit/{id}(id=${note.noteId})}" class="btn btn-primary btn-sm">Edit</a>
+                            <a th:href="@{/notes/delete/{id}(id=${note.noteId})}" class="btn btn-danger btn-sm" th:onclick="return confirm('Are you sure?')">Delete</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
