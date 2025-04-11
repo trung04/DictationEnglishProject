@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final CommentService commentService;
+    private final CommentService commentService = null;
 
     @GetMapping
     public String manageComments(@RequestParam(defaultValue = "0") int page,
@@ -72,3 +72,4 @@ public class CommentController {
         return "redirect:/comments";
     }
 }
+

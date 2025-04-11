@@ -84,6 +84,19 @@
                     </li>
                 </ul>
             </li>
+			<!-- User Management -->
+			<li class="treeview" th:classappend="${activePage == 'users'} ? 'active menu-open'">
+			    <a href="#">
+			        <i class="fa fa-user"></i> <span>User</span>
+			        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+			    </a>
+			    <ul class="treeview-menu">
+			        <li th:classappend="${activePage == 'users'} ? 'active'">
+			            <a th:href="@{/admin/users}"><i class="fa fa-circle-o"></i> All Users</a>
+			        </li>
+			    </ul>
+			</li>
+
 <!--            Note-->
             <li>
                 <a th:href="@{/notes}">
