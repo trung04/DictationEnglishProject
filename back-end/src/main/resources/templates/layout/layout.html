@@ -39,6 +39,13 @@
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
+
+{% comment %} 
+    <body class = "hold-transitionskin-blue sidebar-mini">
+        <div class = "wrapper">
+            <div th:replace = "components/aside"></div>
+            <!----> {% endcomment %}
+
     <div th:replace="components/header::header"></div>
     <!-- Left side column. contains the logo and sidebar -->
     <div th:replace="components/aside::aside"></div>

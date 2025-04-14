@@ -2,6 +2,12 @@ package com.project.englishweb.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+// import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+// @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
+// @JsonManagedReference
+// private List<Lesson> lessons;
+
 
 import java.util.List;
 

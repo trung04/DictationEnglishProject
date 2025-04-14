@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"><head>
+  <meta charset="UTF-8">
+  <title>Quản lý chủ đề</title>
+</head>
+<body>
+  <div id="main-content"></div>
+
+  <script>
+    // Render the topic management table
+    function renderTopicsTable() {
+      const content = `
+        <div style="padding: 20px;">
+          <h2>Quản lý Chủ đề</h2>
+
+          <form id="topic-form" style="margin-bottom: 20px;">
+            <input name="title" placeholder="Tên chủ đề" required />
+            <input name="level" placeholder="Cấp độ" required style="margin-left: 10px;" />
+            <input name="detail" placeholder="Chi tiết" required style="margin-left: 10px;" />
+            <button type="submit" style="margin-left: 10px;">Thêm mới</button>
+          </form>
+
+          <table border="1" cellpadding="10" width="100%">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tên chủ đề</th>
+                <th>Level</th>
+                <th>Chi tiết</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="topics-body"></tbody>
+          </table>
+        </div>
+      `;
+      document.getElementById("main-content").innerHTML = content;
+      initTopicManager(); 
+    }
+
+    // Initialize Topic Manager - fetches and renders the topics
+    function initTopicManager() {
+      const API_URL = 'http://localhost:8080/api/topics'; // Ensure this URL is correct
+      let topics = [];
+      let editingTopicId = null;
+
+      const form = document.getElementById('topic-form');
+      const body = document.getElementById('topics-body');
+
+      // Function to render the table
+      function renderTable() {
+        body.innerHTML = topics.map(topic => `
+          <tr>
+            <td>${topic.topicId}</td>
+            <td>${topic.title}</td>
+            <td>${topic.level}</td>
+            <td>${topic.detail}</td>
+            <td>
+              <button onclick="editTopic(${topic.topicId})">Sửa</button>
+              <button onclick="deleteTopic(${topic.topicId})" style="margin-left:10px;">Xóa</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // Fetch topics from the API
+      function fetchTopics() {
+        fetch(API_URL)
+          .then(res => res.json())
+          .then(data => {
+            topics = data;
+            renderTable();
+          })
+          .catch(err => console.error('Lỗi load topics:', err));
+      }
+
+      // Edit an existing topic
+      window.editTopic = function(id) {
+        const topic = topics.find(t => t.topicId === id);
+        if (topic) {
+          form.title.value = topic.title;
+          form.level.value = topic.level;
+          form.detail.value = topic.detail;
+          editingTopicId = id;
+          form.querySelector('button').innerText = 'Cập nhật';
+        }
+      }
+
+      // Delete a topic
+      window.deleteTopic = function(id) {
+        if (confirm('Bạn có chắc chắn muốn xóa?')) {
+          fetch(`${API_URL}/${id}`, { method: 'DELETE' })
+            .then(() => fetchTopics())
+            .catch(err => console.error('Lỗi xóa topic:', err));
+        }
+      }
+
+      // Handle form submission (Create or Update a topic)
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = {
+          title: form.title.value,
+          level: form.level.value,
+          detail: form.detail.value
+        };
+
+        const method = editingTopicId ? 'PUT' : 'POST';
+        const url = editingTopicId ? `${API_URL}/${editingTopicId}` : API_URL;
+
+        fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        })
+          .then(() => {
+            form.reset();
+            form.querySelector('button').innerText = 'Thêm mới';
+            editingTopicId = null;
+            fetchTopics();
+          })
+          .catch(err => console.error('Lỗi lưu topic:', err));
+      });
+
+      fetchTopics();
+    }
+
+    // Trigger the page load and render the topics table when the page is loaded
+    window.addEventListener("DOMContentLoaded", function () {
+      renderTopicsTable(); // This will trigger the rendering when the page is loaded
+    });
+  </script>
+
+</body>
+</html>

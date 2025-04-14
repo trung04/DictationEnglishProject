@@ -4,6 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+// import com.fasterxml.jackson.annotation.JsonBackReference;
+
+// @ManyToOne
+// @JoinColumn(name = "topicId", nullable = false) // Khóa ngoại
+// @JsonBackReference
+// private Topic topic;
 
 @Entity
 @Table(name = "lessons")
