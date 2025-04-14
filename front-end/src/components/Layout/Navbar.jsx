@@ -1,5 +1,10 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import NotePopup from "../../pages/Note/NotePopup";
+
 const Navbar = () => {
+  const [showNotes, setShowNotes] = useState(false);
+
   return (
     <>
       <nav className="navbar navbar-expand-lg border-bottom p-0 bg-body-tertiary">
@@ -61,141 +66,150 @@ const Navbar = () => {
                   </Link>
                 </div>
               </li>
-             
+
             </ul>
           </div>
         </div>
       </nav>
       <nav className="navbar navbar-expand border-bottom bg-body py-0 shadow-sm">
-      <div className="container-lg d-flex">
-        <div className="flex-grow-1">
-          <span
-            className="nav-link ps-0 d-inline"
-            title="Time you've spent practicing today"
-            data-bs-toggle="tooltip"
-            data-bs-placement="bottom"
-          >
-            <i className="bi bi-clock-history me-1"></i>
-            <span id="time-spent"> 0 minutes </span>
-          </span>
-        </div>
-        <div>
-          <ul className="navbar-nav">
-            <li
-              className="nav-item dropdown-center js-incomplete-lessons-dropdown me-2"
-              data-fetch-incomplete-lessons-url="/api/user/incomplete-lessons"
+        <div className="container-lg d-flex">
+          <div className="flex-grow-1">
+            <span
+              className="nav-link ps-0 d-inline"
+              title="Time you've spent practicing today"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
             >
-              <Link
-                to="#"
-                id="incomplete-lessons-toggle"
-                className="dropdown-toggle nav-link"
-                title="The exercises you have started but not finished"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+              <i className="bi bi-clock-history me-1"></i>
+              <span id="time-spent"> 0 minutes </span>
+            </span>
+          </div>
+          <div>
+            <ul className="navbar-nav">
+              <li
+                className="nav-item dropdown-center js-incomplete-lessons-dropdown me-2"
+                data-fetch-incomplete-lessons-url="/api/user/incomplete-lessons"
               >
-                <i className="bi bi-star-half"></i>
-                <span className="d-none d-lg-inline">In-progress</span>
-              </Link>
-              <div
-                className="dropdown-menu shadow mt-0"
-                aria-labelledby="#incomplete-lessons-toggle"
-                style={{ width: "300px" }}
-              >
-                <div className="js-no-incomplete-lessons d-none px-2">
-                  You don't have any incomplete exercises!
+                <Link
+                  to="#"
+                  id="incomplete-lessons-toggle"
+                  className="dropdown-toggle nav-link"
+                  title="The exercises you have started but not finished"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i className="bi bi-star-half"></i>
+                  <span className="d-none d-lg-inline">In-progress</span>
+                </Link>
+                <div
+                  className="dropdown-menu shadow mt-0"
+                  aria-labelledby="#incomplete-lessons-toggle"
+                  style={{ width: "300px" }}
+                >
+                  <div className="js-no-incomplete-lessons d-none px-2">
+                    You don't have any incomplete exercises!
+                  </div>
+                  <div className="js-incomplete-lessons-container"></div>
                 </div>
-                <div className="js-incomplete-lessons-container"></div>
-              </div>
-            </li>
-            <li className="nav-item me-2" id="app-user-notes"></li>
-            <li className="nav-item me-2 dropdown-center js-dropdown-hover">
-              <Link
-                to="#"
-                id="account-dropdown-toggle"
-                className="dropdown-toggle nav-link"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <i className="bi bi-person-circle"></i>
-                <span className="d-none d-md-inline"> jimmy </span>
-              </Link>
-              <div
-                className="dropdown-menu dropdown-menu-right dropdown-menu-md-start shadow mt-0"
-                aria-labelledby="#account-dropdown-toggle"
-              >
-                <Link className="dropdown-item" to="/profile/337536">
-                  Public profile
+              </li>
+              <li className="nav-item me-2" id="app-user-notes">
+                <a href="#"
+                  className="nav-link"
+                  onClick={() => setShowNotes(true)}
+                  title="Your notes">
+                  <i className="bi bi-journal-text"></i>
+                  <span className="d-none d-md-inline ms-1">Notes</span>
+                </a>
+              </li>
+              <li className="nav-item me-2 dropdown-center js-dropdown-hover">
+                <Link
+                  to="#"
+                  id="account-dropdown-toggle"
+                  className="dropdown-toggle nav-link"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i className="bi bi-person-circle"></i>
+                  <span className="d-none d-md-inline"> jimmy </span>
                 </Link>
-                <Link className="dropdown-item" to="/user/profile">
-                  Account information
-                </Link>
-                <Link className="dropdown-item" to="/user/notifications">
-                  Notifications
-                  <span className="badge bg-danger rounded-pill"></span>
-                </Link>
-                <Link className="dropdown-item" to="/user/comments">
-                  Comments
-                </Link>
-                <Link className="dropdown-item" to="/user/favorite-lessons">
-                  Favorite lessons
-                </Link>
-                <Link className="dropdown-item" to="/user/change-password">
-                  Change password
-                </Link>
-                <Link className="dropdown-item" to="/user/edit-email">
-                  Change Email
-                </Link>
-                <div className="dropdown-divider"></div>
-                <Link className="dropdown-item" to="/logout">
-                  Logout
-                </Link>
-              </div>
-            </li>
-            <li className="nav-item dropdown">
-              <button
-                className="btn btn-link nav-link p-2 dropdown-toggle d-flex align-items-center border-0"
-                id="bd-theme"
-                type="button"
-                title="Switch theme"
-                aria-expanded="false"
-                data-bs-toggle="dropdown"
-                data-bs-display="static"
-                aria-label="Toggle theme (dark)"
-              > 
-                <i className="bi bi-sun-fill"></i>
-                <span id="bd-theme-text"></span>
-              </button>
-              <ul
-                className="dropdown-menu dropdown-menu-end"
-                aria-labelledby="bd-theme-text"
-              >
-                <li>
-                  <button
-                    type="button"
-                    className="dropdown-item d-flex align-items-center"
-                    data-bs-theme-value="light"
-                    aria-pressed="false"
-                  >
-                    <i className="bi bi-sun-fill me-2"></i> Light
-                  </button>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    className="dropdown-item d-flex align-items-center active"
-                    data-bs-theme-value="dark"
-                    aria-pressed="true"
-                  >
-                    <i className="bi bi-moon-stars-fill me-2"></i> Dark
-                  </button>
-                </li>
-              </ul>
-            </li>
-          </ul>
+                <div
+                  className="dropdown-menu dropdown-menu-right dropdown-menu-md-start shadow mt-0"
+                  aria-labelledby="#account-dropdown-toggle"
+                >
+                  <Link className="dropdown-item" to="/profile/337536">
+                    Public profile
+                  </Link>
+                  <Link className="dropdown-item" to="/user/profile">
+                    Account information
+                  </Link>
+                  <Link className="dropdown-item" to="/user/notifications">
+                    Notifications
+                    <span className="badge bg-danger rounded-pill"></span>
+                  </Link>
+                  <Link className="dropdown-item" to="/user/comments">
+                    Comments
+                  </Link>
+                  <Link className="dropdown-item" to="/user/favorite-lessons">
+                    Favorite lessons
+                  </Link>
+                  <Link className="dropdown-item" to="/user/change-password">
+                    Change password
+                  </Link>
+                  <Link className="dropdown-item" to="/user/edit-email">
+                    Change Email
+                  </Link>
+                  <div className="dropdown-divider"></div>
+                  <Link className="dropdown-item" to="/logout">
+                    Logout
+                  </Link>
+                </div>
+              </li>
+              <li className="nav-item dropdown" >
+                <button
+                  className="btn btn-link nav-link p-2 dropdown-toggle d-flex align-items-center border-0"
+                  id="bd-theme"
+                  type="button"
+                  title="Switch theme"
+                  aria-expanded="false"
+                  data-bs-toggle="dropdown"
+                  data-bs-display="static"
+                  aria-label="Toggle theme (dark)"
+                >
+                  <i className="bi bi-sun-fill"></i>
+                  <span id="bd-theme-text"></span>
+                </button>
+                <ul
+                  className="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="bd-theme-text"
+                >
+                  <li>
+                    <button
+                      type="button"
+                      className="dropdown-item d-flex align-items-center"
+                      data-bs-theme-value="light"
+                      aria-pressed="false"
+                    >
+                      <i className="bi bi-sun-fill me-2"></i> Light
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      className="dropdown-item d-flex align-items-center active"
+                      data-bs-theme-value="dark"
+                      aria-pressed="true"
+                    >
+                      <i className="bi bi-moon-stars-fill me-2"></i> Dark
+                    </button>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </nav>
-      
+      </nav>
+      {showNotes && <NotePopup isOpen={showNotes} onClose={() => setShowNotes(false)} />}
+
     </>
   );
 };
