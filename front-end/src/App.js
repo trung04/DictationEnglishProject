@@ -13,6 +13,7 @@ import Login from "./pages/User/Login";
 import Register from "./pages/User/Register";
 import UserProfile from "./pages/User/UserProfile";
 import ChangePassword from "./pages/User/ChangePassword";
+import TopicManager from "./pages/AdminTopics";
 function App() {
   return (
     <>
@@ -28,6 +29,7 @@ function App() {
             <Route path="register" element={<Register />} />
             <Route path="user/profile" element={<UserProfile />} />
             <Route path="user/change-password" element={<ChangePassword />} />
+            <Route path="admin/topics" element={<TopicManager />} />
 
             <Route path="exercises/short-stories" element={<ListExercise />} />
             <Route

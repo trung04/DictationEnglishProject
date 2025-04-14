@@ -1,6 +1,6 @@
 package com.project.englishweb.Controller;
 
-import com.project.englishweb.Entity.Question;
+import com.project.englishweb.DTO.QuestionDTO;
 import com.project.englishweb.Service.QuestionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/questions")
 public class QuestionController {
@@ -21,40 +20,34 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
-    // Lấy tất cả câu hỏi
     @GetMapping
-    public ResponseEntity<List<Question>> getAllQuestions() {
-        List<Question> questions = questionService.getAllQuestions();
-        return ResponseEntity.ok(questions);
+    public ResponseEntity<List<QuestionDTO>> getAllQuestions() {
+        return ResponseEntity.ok(questionService.getAllQuestions());
     }
 
-    // Lấy câu hỏi theo ID
     @GetMapping("/{id}")
-    public ResponseEntity<Question> getQuestionById(@PathVariable Long id) {
-        Optional<Question> question = questionService.getQuestionById(id);
-        return question.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    // Thêm mới câu hỏi
-    @PostMapping
-    public ResponseEntity<Question> createQuestion(@RequestBody Question question) {
-        Question createdQuestion = questionService.createQuestion(question);
-        return ResponseEntity.ok(createdQuestion);
-    }
-
-    // Cập nhật câu hỏi
-    @PutMapping("/{id}")
-    public ResponseEntity<Question> updateQuestion(@PathVariable Long id, @RequestBody Question questionDetails) {
+    public ResponseEntity<QuestionDTO> getQuestionById(@PathVariable Long id) {
         try {
-            Question updatedQuestion = questionService.updateQuestion(id, questionDetails);
-            return ResponseEntity.ok(updatedQuestion);
+            return ResponseEntity.ok(questionService.getQuestionById(id));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    // Xóa câu hỏi
+    @PostMapping
+    public ResponseEntity<QuestionDTO> createQuestion(@RequestBody QuestionDTO questionDTO) {
+        return ResponseEntity.ok(questionService.createQuestion(questionDTO));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<QuestionDTO> updateQuestion(@PathVariable Long id, @RequestBody QuestionDTO questionDTO) {
+        try {
+            return ResponseEntity.ok(questionService.updateQuestion(id, questionDTO));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteQuestion(@PathVariable Long id) {
         questionService.deleteQuestion(id);
