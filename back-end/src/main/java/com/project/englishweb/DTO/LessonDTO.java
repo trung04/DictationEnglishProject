@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class LessonDTO {
     private String title;
-    private String levelId;
+    private Long levelId;
     private String URL;
     private Long topicId;
 }
