@@ -20,7 +20,7 @@ public class Lesson {
     private String title;
 
     @Column(nullable = false)
-    private String level;
+    private Long levelId;
 
     private String URL;
 
