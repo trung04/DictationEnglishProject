@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/topics")
+@RequestMapping("/topics")
 public class TopicController {
 
     private final TopicService topicService;

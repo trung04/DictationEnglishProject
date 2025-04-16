@@ -3,6 +3,7 @@ package com.project.englishweb.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,11 +21,19 @@ public class Topic {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    private Long levelId;
 
     @Column(columnDefinition = "TEXT")
     private String detail;
+
+    @ManyToOne
+    @JoinColumn(name = "levelId", nullable = false) // Khóa ngoại
+    private Level level;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Topic parent; // Topic cha
+
+
 
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lesson> lessons;
@@ -36,13 +45,7 @@ public class Topic {
         this.title = title;
     }
 
-    public Long getLevelId() {
-        return levelId;
-    }
 
-    public void setLevel(Long levelId) {
-        this.levelId = levelId;
-    }
     
     public String getDetail() {
         return detail;
