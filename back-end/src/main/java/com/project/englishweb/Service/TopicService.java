@@ -31,7 +31,7 @@ public class TopicService {
     public Topic updateTopic(Long id, Topic topicDetails) {
         Topic topic = topicRepository.findById(id).orElseThrow(() -> new RuntimeException("Topic không tồn tại"));
         topic.setTitle(topicDetails.getTitle());
-        topic.setLevel(topicDetails.getLevel());
+        topic.setLevelId(topicDetails.getLevelId());
         topic.setDetail(topicDetails.getDetail());
         return topicRepository.save(topic);
     }

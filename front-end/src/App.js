@@ -20,7 +20,13 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="exercises" element={<Exercises />} />
+            <Route path="exercises" element={<Exercises />}>
+              <Route
+                path="english-conversations/1-at-home-1.399/listen-and-type"
+                element={<DetailExercise />}
+              />
+            </Route>
+
             <Route path="top-users" element={<TopUsers />} />
             <Route path="contact" element={<Contact />} />
             <Route path="test" element={<Test />} />
@@ -30,10 +36,6 @@ function App() {
             <Route path="user/change-password" element={<ChangePassword />} />
 
             <Route path="exercises/short-stories" element={<ListExercise />} />
-            <Route
-              path="/exercises/english-conversations/1-at-home-1.399/listen-and-type"
-              element={<DetailExercise />}
-            />
           </Route>
         </Routes>
       </BrowserRouter>

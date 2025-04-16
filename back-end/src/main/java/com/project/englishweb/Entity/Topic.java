@@ -21,7 +21,7 @@ public class Topic {
     private String title;
 
     @Column(nullable = false)
-    private String level;
+    private Long levelId;
 
     @Column(columnDefinition = "TEXT")
     private String detail;
@@ -35,13 +35,13 @@ public class Topic {
     public void setTitle(String title) {
         this.title = title;
     }
-    
-    public String getLevel() {
-        return level;
+
+    public Long getLevelId() {
+        return levelId;
     }
-    
-    public void setLevel(String level) {
-        this.level = level;
+
+    public void setLevel(Long levelId) {
+        this.levelId = levelId;
     }
     
     public String getDetail() {
