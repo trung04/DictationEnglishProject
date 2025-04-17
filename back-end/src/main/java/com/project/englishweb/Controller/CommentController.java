@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final CommentService commentService = null;
+    private final CommentService commentService ;
 
     @GetMapping
     public String manageComments(@RequestParam(defaultValue = "0") int page,
