@@ -13,18 +13,16 @@ import java.util.List;
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
     List<Lesson> findByTopicTopicId(Long topicId);
-    List<Lesson> findByLevelId(Long levelId);
     List<Lesson> findByTitle(String title);
-
 
     @Query("SELECT l FROM Lesson l WHERE " +
             "(:title IS NULL OR LOWER(l.title) LIKE LOWER(CONCAT('%', :title, '%'))) AND " +
-            "(:levelId IS NULL OR :level = '' OR l.levelId = :levelId) AND " + // Thêm điều kiện kiểm tra chuỗi rỗng cho level
-            "(:topicId IS NULL OR l.topic.topicId = :topicId)")
-    Page<Lesson> findByTitleAndLevelAndTopicIdWithSearch(
+            "(:levelName IS NULL OR LOWER(l.level.name) LIKE LOWER(CONCAT('%', :levelName, '%'))) AND " +
+            "(:topicTitle IS NULL OR LOWER(l.topic.title) LIKE LOWER(CONCAT('%', :topicTitle, '%')))")  // Tìm kiếm theo topic.title
+    Page<Lesson> findByTitleAndLevelNameAndTopicTitleWithSearch(
             @Param("title") String title,
-            @Param("levelId") Long levelId,
-            @Param("topicId") Long topicId,
+            @Param("levelName") String levelName,
+            @Param("topicTitle") String topicTitle,
             Pageable pageable
     );
 }
