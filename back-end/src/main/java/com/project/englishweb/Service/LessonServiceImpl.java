@@ -1,8 +1,10 @@
 package com.project.englishweb.Service;
 
 import com.project.englishweb.Entity.Lesson;
+import com.project.englishweb.Entity.Level;
 import com.project.englishweb.Entity.Topic;
 import com.project.englishweb.Repository.LessonRepository;
+import com.project.englishweb.Repository.LevelRepository;
 import com.project.englishweb.Repository.TopicRepository;
 import com.project.englishweb.DTO.LessonDTO;
 import lombok.RequiredArgsConstructor;
@@ -18,20 +20,27 @@ import java.util.NoSuchElementException;
 public class LessonServiceImpl implements LessonService {
 
     private final LessonRepository lessonRepository;
+    private final LevelRepository levelRepository;
     private final TopicRepository topicRepository;
 
-    @Override
     public Lesson createLesson(LessonDTO lessonDTO) {
         Topic topic = topicRepository.findById(lessonDTO.getTopicId())
                 .orElseThrow(() -> new NoSuchElementException("Topic not found"));
 
+        // Tìm Level từ levelId
+        Level level = levelRepository.findById(lessonDTO.getLevelId())
+                .orElseThrow(() -> new NoSuchElementException("Level not found"));
+
+        // Tạo bài học mới
         Lesson lesson = new Lesson();
         lesson.setTitle(lessonDTO.getTitle());
-        lesson.setLevelId(lessonDTO.getLevelId());
+        lesson.setLevel(level);  // Gán level từ DTO
         lesson.setURL(lessonDTO.getURL());
         lesson.setTopic(topic);
 
-        return lessonRepository.save(lesson);
+        lesson.setLevelName(level.getName());
+
+        return lessonRepository.save(lesson);  // Lưu bài học vào cơ sở dữ liệu
     }
 
     @Override
@@ -41,24 +50,28 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public Page<Lesson> getAllLessons(Pageable pageable) {
-        return lessonRepository.findAll(pageable); // Sử dụng phương thức findAll có Pageable
+        return lessonRepository.findAll(pageable);
     }
 
     @Override
     public Lesson getLessonById(Long id) {
         return lessonRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Lesson not found"));
+                .orElseThrow(() -> new NoSuchElementException("Lesson không tồn tại"));
     }
 
     @Override
     public Lesson updateLesson(Long id, LessonDTO lessonDTO) {
         Lesson lesson = getLessonById(id);
 
+        Level level = levelRepository.findById(lessonDTO.getLevelId())
+                .orElseThrow(() -> new NoSuchElementException("Level không tồn tại"));
+
         Topic topic = topicRepository.findById(lessonDTO.getTopicId())
-                .orElseThrow(() -> new NoSuchElementException("Topic not found"));
+                .orElseThrow(() -> new NoSuchElementException("Topic không tồn tại"));
 
         lesson.setTitle(lessonDTO.getTitle());
-        lesson.setLevelId(lessonDTO.getLevelId());
+        lesson.setLevel(level);
+        lesson.setLevelName(level.getName());
         lesson.setURL(lessonDTO.getURL());
         lesson.setTopic(topic);
 
@@ -71,19 +84,15 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public List<Lesson> getLessonsByTopicId(Long topicId) {
-        return lessonRepository.findByTopicTopicId(topicId);
-    }
-    @Override
-    public List<Lesson> getLessonsByLevelId(Long levelId) {
-        return lessonRepository.findByLevelId(levelId);
-    }
-    @Override
     public List<Lesson> getLessonsByTitle(String title) {
         return lessonRepository.findByTitle(title);
     }
     @Override
-    public Page<Lesson> searchLessons(String title, Long levelId, Long topicId, Pageable pageable) {
-        return lessonRepository.findByTitleAndLevelAndTopicIdWithSearch(title, levelId, topicId, pageable); // Gọi phương thức repository mới
+    public List<Lesson> getLessonsByTopicId(Long topicId) {
+        return lessonRepository.findByTopicTopicId(topicId);
+    }
+    @Override
+    public Page<Lesson> searchLessons(String title, String levelName, String topicTitle, Pageable pageable) {
+        return lessonRepository.findByTitleAndLevelNameAndTopicTitleWithSearch(title, levelName, topicTitle, pageable);
     }
 }
