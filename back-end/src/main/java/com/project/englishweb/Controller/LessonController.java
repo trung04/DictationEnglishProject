@@ -2,7 +2,10 @@ package com.project.englishweb.Controller;
 
 import com.project.englishweb.DTO.LessonDTO;
 import com.project.englishweb.Entity.Lesson;
+import com.project.englishweb.Entity.Level;
+import com.project.englishweb.Entity.Topic;
 import com.project.englishweb.Service.LessonService;
+import com.project.englishweb.Service.LevelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,23 +22,30 @@ import org.springframework.web.bind.annotation.*;
 public class LessonController {
 
     private final LessonService lessonService;
+    private final LevelService levelService;
 
     @GetMapping
     public String lessonManagement(@RequestParam(required = false) String title,
-                                   @RequestParam(required = false) Long levelId,
-                                   @RequestParam(required = false) Long topicId,
+                                   @RequestParam(required = false) String levelName,  // Tìm kiếm theo level name
+                                   @RequestParam(required = false) String topicTitle,  // Tìm kiếm theo topic title
                                    @RequestParam(defaultValue = "0") int page,
                                    @RequestParam(required = false) Long editId,
+                                   @RequestParam(required = false) Long levelId,
                                    Model model) {
         Pageable pageable = PageRequest.of(page, 10);
         Page<Lesson> lessonsPage;
 
-        log.info("Quản lý bài học: Tìm kiếm (Controller): title={}, levelId={}, topicId={}, page={}, editId={}", title, levelId, topicId, page, editId);
-        if (title != null || levelId != null || topicId != null) {
-            lessonsPage = lessonService.searchLessons(title, levelId, topicId, pageable);
+        if (levelId != null) {
+            model.addAttribute("levels", levelService.getLevelById(levelId));
+        } else {
+            model.addAttribute("levels", levelService.getAllLevels());  // Nếu không có levelId, lấy tất cả Level
+        }
+
+        if (title != null || levelName != null || topicTitle != null) {
+            lessonsPage = lessonService.searchLessons(title, levelName, topicTitle, pageable);  // Gọi search theo topicTitle
             model.addAttribute("searchTitle", title);
-            model.addAttribute("searchLevelId", levelId);
-            model.addAttribute("searchTopicId", topicId);
+            model.addAttribute("searchLevelName", levelName);  // Truyền levelName cho tìm kiếm
+            model.addAttribute("searchTopicTitle", topicTitle);  // Truyền topicTitle cho tìm kiếm
         } else {
             lessonsPage = lessonService.getAllLessons(pageable);
         }
@@ -53,7 +63,8 @@ public class LessonController {
             if (lessonToEdit != null) {
                 LessonDTO editDTO = new LessonDTO();
                 editDTO.setTitle(lessonToEdit.getTitle());
-                editDTO.setLevelId(lessonToEdit.getLevelId());
+                editDTO.setLevelName(lessonToEdit.getLevel().getName());
+                editDTO.setLevelId(lessonToEdit.getLevel().getLevelId());  // Cập nhật ID Level từ đối tượng Level
                 editDTO.setURL(lessonToEdit.getURL());
                 editDTO.setTopicId(lessonToEdit.getTopic().getTopicId());
                 model.addAttribute("editLessonDTO", editDTO);
@@ -65,6 +76,12 @@ public class LessonController {
 
     @PostMapping
     public String createLesson(@ModelAttribute LessonDTO lessonDTO) {
+        Level level = levelService.getLevelById(lessonDTO.getLevelId());  // Lấy level bằng levelId
+        if (level != null) {
+            lessonDTO.setLevelName(level.getName());  // Cập nhật tên level
+        }
+
+        // Tạo bài học mới
         lessonService.createLesson(lessonDTO);
         return "redirect:/lessons";
     }
