@@ -14,9 +14,8 @@
         Lesson getLessonById(Long id);
         Lesson updateLesson(Long id, LessonDTO lessonDTO);
         void deleteLesson(Long id);
-        List<Lesson> getLessonsByTopicId(Long topicId);
-        List<Lesson> getLessonsByLevelId(Long levelId);
         List<Lesson> getLessonsByTitle(String title);
-        Page<Lesson> searchLessons(String title, Long levelId, Long topicId, Pageable pageable);
+        List<Lesson> getLessonsByTopicId(Long topicId);
+        Page<Lesson> searchLessons(String title, String levelName, String topicTitle, Pageable pageable);
     }
 
