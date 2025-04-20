@@ -33,10 +33,10 @@
                             <label for="createTitle">Title</label>
                             <input type="text" class="form-control" id="createTitle" th:field="*{title}" required/>
                         </div>
-                        <div class="form-group">
-                            <label for="createLevel">Level</label>
-                            <input type="text" class="form-control" id="createLevel" th:field="*{level}" required/>
-                        </div>
+<!--                            <div class="form-group">-->
+<!--                                <label for="createLevel">Level</label>-->
+<!--                                <input type="text" class="form-control" id="createLevel" th:field="*{levelName}" required/>-->
+<!--                            </div>-->
                         <div class="form-group">
                             <label for="createURL">URL</label>
                             <input type="text" class="form-control" id="createURL" th:field="*{URL}" required/>
@@ -45,6 +45,10 @@
                             <label for="createTopicId">Topic ID</label>
                             <input type="number" class="form-control" id="createTopicId" th:field="*{topicId}" required/>
                         </div>
+                        <div class="form-group">
+                            <label for="createLevelId">Level ID</label>
+                            <input type="number" class="form-control" id="createLevelId" th:field="*{levelId}" required/>
+                        </div>
                         <button type="submit" class="btn btn-primary">Save Lesson</button>
                         <button type="button" class="btn btn-default"
                                 onclick="document.getElementById('createLessonFormContainer').style.display='none'; document.getElementById('showCreateFormBtn').style.display='inline-block';">
@@ -52,7 +56,6 @@
                         </button>
                     </form>
                 </div>
-
                 <!-- EDIT FORM -->
                 <div th:if="${editLessonId != null}">
                     <h3>Edit Lesson</h3>
@@ -63,15 +66,20 @@
                         </div>
                         <div class="form-group">
                             <label for="editLevel">Level</label>
-                            <input type="text" class="form-control" id="editLevel" th:field="*{level}" required/>
+                            <select class="form-control" id="editLevel" th:field="*{levelId}" required>
+                                <option th:each="level : ${levels}"
+                                        th:value="${level.levelId}"
+                                        th:text="${level.name}"
+                                        th:selected="${level.levelId == editLessonDTO.levelId}">Select Level</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="editURL">URL</label>
                             <input type="text" class="form-control" id="editURL" th:field="*{URL}" required/>
                         </div>
                         <div class="form-group">
-                            <label for="editTopicId">Topic ID</label>
-                            <input type="number" class="form-control" id="editTopicId" th:field="*{topicId}" required/>
+                            <label for="editTopicTitle">Topic Title</label>
+                            <input type="text" class="form-control" id="editTopicTitle" th:field="*{topicId}" required/>
                         </div>
                         <button type="submit" class="btn btn-primary">Update Lesson</button>
                         <a th:href="@{/lessons}" class="btn btn-default">Cancel</a>
@@ -88,11 +96,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="searchLevel" class="mr-2">Level:</label>
-                                <input type="text" class="form-control form-control-sm" id="searchLevel" name="level" th:value="${searchLevel}">
+                                <input type="text" class="form-control form-control-sm" id="searchLevel" name="levelName" th:value="${searchLevelName}">
                             </div>
                             <div class="form-group">
-                                <label for="searchTopicId" class="mr-2">Topic ID:</label>
-                                <input type="number" class="form-control form-control-sm" id="searchTopicId" name="topicId" th:value="${searchTopicId}">
+                                <label for="searchTopicTitle" class="mr-2">Topic Title:</label>
+                                <input type="text" class="form-control form-control-sm" id="searchTopicTitle" name="topicTitle" th:value="${searchTopicTitle}">
                             </div>
                             <button type="submit" class="btn btn-success btn-sm">Search</button>
                         </div>
@@ -103,15 +111,17 @@
                             <th>Title</th>
                             <th>Level</th>
                             <th>URL</th>
-                            <th>TopicId</th>
+                            <th>Topic Title</th>
+                            <th>Topic ID</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="lesson : ${lessons.content}">
                             <td th:text="${lesson.title}"></td>
-                            <td th:text="${lesson.level}"></td>
+                            <td th:text="${lesson.level.name}"></td>  <!-- Hiển thị tên Level -->
                             <td><a th:href="${lesson.URL}" th:text="${lesson.URL}" target="_blank"></a></td>
+                            <td th:text="${lesson.topic.title}"></td> <!-- Hiển thị tên Topic -->
                             <td th:text="${lesson.topic.topicId}"></td>
                             <td>
                                 <a th:href="@{/lessons(editId=${lesson.lessonId})}" class="btn btn-warning btn-sm">Edit</a>
@@ -124,14 +134,14 @@
                     <div class="box-footer clearfix">
                         <ul class="pagination pagination-sm no-margin pull-right">
                             <li th:if="${currentPage > 0}">
-                                <a th:href="@{/lessons(page=${currentPage - 1}, title=${searchTitle}, level=${searchLevel}, topicId=${searchTopicId})}">&laquo;</a>
+                                <a th:href="@{/lessons(page=${currentPage - 1}, title=${searchTitle}, levelName=${searchLevelName}, topicTitle=${searchTopicTitle})}">&laquo;</a>
                             </li>
                             <li th:each="page : ${#numbers.sequence(0, totalPages - 1)}"
                                 th:class="${currentPage == page ? 'active' : ''}">
-                                <a th:href="@{/lessons(page=${page}, title=${searchTitle}, level=${searchLevel}, topicId=${searchTopicId})}" th:text="${page + 1}"></a>
+                                <a th:href="@{/lessons(page=${page}, title=${searchTitle}, levelName=${searchLevelName}, topicTitle=${searchTopicTitle})}" th:text="${page + 1}"></a>
                             </li>
                             <li th:if="${currentPage < totalPages - 1}">
-                                <a th:href="@{/lessons(page=${currentPage + 1}, title=${searchTitle}, level=${searchLevel}, topicId=${searchTopicId})}">&raquo;</a>
+                                <a th:href="@{/lessons(page=${currentPage + 1}, title=${searchTitle}, levelName=${searchLevelName}, topicTitle=${searchTopicTitle})}">&raquo;</a>
                             </li>
                         </ul>
                     </div>
