@@ -18,14 +18,16 @@ public class Lesson {
 
     @Column(nullable = false)
     private String title;
-
-    @Column(nullable = false)
-    private Long levelId;
+    @Column(name = "level")
+    private String levelName;
+    @ManyToOne
+    @JoinColumn(name = "level_Id", nullable = false) // Khóa ngoại
+    private Level level;
 
     private String URL;
 
     @ManyToOne
-    @JoinColumn(name = "topicId", nullable = false) // Khóa ngoại
+    @JoinColumn(name = "topic_Id", nullable = false) // Khóa ngoại
     private Topic topic;
 
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
