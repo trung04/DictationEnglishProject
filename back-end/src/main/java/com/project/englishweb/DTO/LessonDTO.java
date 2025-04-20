@@ -10,4 +10,6 @@ public class LessonDTO {
     private Long levelId;
     private String URL;
     private Long topicId;
+    private String levelName;
+
 }
