@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 const Card = (props) => {
+  console.log(props);
   return (
     <>
       <div className="card border shadow-sm bg-body-tertiary">
@@ -20,7 +21,7 @@ const Card = (props) => {
             </div>
             <div className="flex-grow-1">
               <h2 className="fs-4 mb-2">
-                <a href="/exercises/short-stories">{props.name}</a>
+                <Link to={`${props.topicId}`}>{props.name}</Link>
               </h2>
               <div>
                 <span className="text-muted">Levels:{props.level}</span>

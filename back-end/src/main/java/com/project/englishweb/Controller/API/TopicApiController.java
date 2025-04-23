@@ -24,10 +24,16 @@ public class TopicApiController {
     }
     // Lấy tất cả Topics
     @GetMapping
-    public ResponseEntity<List<Topic>> getAllTopics() {
-        List<Topic> topics = topicService.getAllTopics();
+    public ResponseEntity<List<Topic>> findByParentIsNull() {
+        List<Topic> topics = topicService.findByParentIsNull();
         return ResponseEntity.ok(topics);
     }
+    @GetMapping("parentTopic/{id}")
+    public ResponseEntity<List<Topic>> findByParentTopicId(@PathVariable Long id) {
+        List<Topic> topics = topicService.findByParentTopicId(id);
+        return ResponseEntity.ok(topics);
+    }
+
 
 
 }

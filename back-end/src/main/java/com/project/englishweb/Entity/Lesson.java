@@ -1,5 +1,6 @@
 package com.project.englishweb.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,7 +28,8 @@ public class Lesson {
     private String URL;
 
     @ManyToOne
-    @JoinColumn(name = "topic_Id", nullable = false) // Khóa ngoại
+    @JoinColumn(name = "topic_id", nullable = false) // Khóa ngoại
+    @JsonBackReference
     private Topic topic;
 
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -35,4 +37,6 @@ public class Lesson {
 
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Progress> progresses;
+
+
 }

@@ -1,5 +1,6 @@
 package com.project.englishweb.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,27 +33,29 @@ public class Topic {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Topic parent; // Topic cha
+    @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Lesson> lessons = new ArrayList<>();
 
 
-
-    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Lesson> lessons;
-    public String getTitle() {
-        return title;
-    }
-    
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-
-    
-    public String getDetail() {
-        return detail;
-    }
-    
-    public void setDetail(String detail) {
-        this.detail = detail;
-    }    
+//    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Lesson> lessons;
+//    public String getTitle() {
+//        return title;
+//    }
+//
+//    public void setTitle(String title) {
+//        this.title = title;
+//    }
+//
+//
+//
+//    public String getDetail() {
+//        return detail;
+//    }
+//
+//    public void setDetail(String detail) {
+//        this.detail = detail;
+//    }
 
 }

@@ -1,11 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Navbar2 from "../components/Layout/Navbar2";
 import { useState, useEffect, useRef } from "react";
 import YoutubeFrame from "../components/UI/YoutubeFrame";
 import ToggleDownSimple from "../components/UI/ToggleDownSimple";
 import Input from "../components/UI/Input";
-
+import axios from "axios";
 const DetailExercise = () => {
+  const { id } = useParams();
   const [sizeVideo, setSizeVieo] = useState();
   //chia grid bootstrap có 12 cột
   const totalSize = 12;
@@ -19,10 +20,22 @@ const DetailExercise = () => {
   const correctText = "Hello world this is a test";
   const correctWords = correctText.split(" ");
   const inputWords = inputText.trim().split(" ");
+  const [lesson, setLesson] = useState([]);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/api/lessons/${id}`)
+      .then((response) => {
+        setLesson(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi lấy danh sách topics:", error);
+      });
+  }, []);
 
   return (
     <>
-      <Navbar2></Navbar2>
+      <Navbar2 title={lesson.title}></Navbar2>
 
       <div className="container-lg">
         <div className="mb-3">
@@ -34,10 +47,10 @@ const DetailExercise = () => {
               aria-label="Completions: 5"
               data-bs-original-title="Completions: 5"
             ></i>
-            How to enter flow state
+            {lesson.title}
           </h1>
           <div className="text-muted d-inline-block ms-1">
-            <small>Vocab level: C1</small>
+            <small>Vocab level: {lesson.level ? lesson.level.name : ""}</small>
           </div>
           <div className="text-muted d-inline-block ms-1">
             <div className="dropdown">
@@ -123,7 +136,7 @@ const DetailExercise = () => {
                   </div>
                 </div>
                 <div className={` ${isHidden ? "d-none" : ""}`}>
-                  <YoutubeFrame sizeVideo={sizeVideo} />
+                  <YoutubeFrame url={lesson.url} sizeVideo={sizeVideo} />
                 </div>
               </div>
               <div className="mt-1 d-none d-lg-block">

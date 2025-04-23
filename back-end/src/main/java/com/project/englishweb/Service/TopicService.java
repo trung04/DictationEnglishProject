@@ -16,7 +16,14 @@ public class TopicService {
     public List<Topic> getAllTopics() {
         return topicRepository.findAll();
     }
+    //lấy ra cá topic cha
+    public List<Topic> findByParentIsNull(){
+        return topicRepository.findByParentIsNull();
+    }
+    public List<Topic> findByParentTopicId(Long parentTopicId) {
+        return topicRepository.findByParentTopicId(parentTopicId);
 
+    }
     // Lấy topic theo ID
     public Optional<Topic> getTopicById(Long id) {
         return topicRepository.findById(id);

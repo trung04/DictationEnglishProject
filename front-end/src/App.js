@@ -13,6 +13,7 @@ import Login from "./pages/User/Login";
 import Register from "./pages/User/Register";
 import UserProfile from "./pages/User/UserProfile";
 import ChangePassword from "./pages/User/ChangePassword";
+import ListTopic from "./pages/ListTopic";
 function App() {
   return (
     <>
@@ -21,12 +22,10 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="exercises" element={<Exercises />}>
-              <Route
-                path="english-conversations/1-at-home-1.399/listen-and-type"
-                element={<DetailExercise />}
-              />
+              <Route index element={<ListTopic />} />
+              <Route path=":id" element={<ListExercise />}></Route>
+              <Route path="lesson/:id" element={<DetailExercise />} />
             </Route>
-
             <Route path="top-users" element={<TopUsers />} />
             <Route path="contact" element={<Contact />} />
             <Route path="test" element={<Test />} />
@@ -34,8 +33,6 @@ function App() {
             <Route path="register" element={<Register />} />
             <Route path="user/profile" element={<UserProfile />} />
             <Route path="user/change-password" element={<ChangePassword />} />
-
-            <Route path="exercises/short-stories" element={<ListExercise />} />
           </Route>
         </Routes>
       </BrowserRouter>

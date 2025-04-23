@@ -21,7 +21,4 @@ public class Level {
     @Column(nullable = true)
     private String description;
 
-    @OneToMany(mappedBy = "level", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Lesson> lessons;
-
 }
