@@ -2,62 +2,79 @@ package com.project.englishweb.Controller;
 
 import com.project.englishweb.Entity.Question;
 import com.project.englishweb.Service.QuestionService;
-
+import com.project.englishweb.DTO.QuestionDTO;
+import com.project.englishweb.DTO.QuestionResponseDTO;
+import com.project.englishweb.Service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/questions")
+@Controller
+@RequestMapping("/questions")
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final LessonService lessonService;
 
     @Autowired
-    public QuestionController(QuestionService questionService) {
+    public QuestionController(QuestionService questionService, LessonService lessonService) {
         this.questionService = questionService;
+        this.lessonService = lessonService;
     }
 
-    // Lấy tất cả câu hỏi
     @GetMapping
-    public ResponseEntity<List<Question>> getAllQuestions() {
-        List<Question> questions = questionService.getAllQuestions();
-        return ResponseEntity.ok(questions);
-    }
+    public String questionManagement(@RequestParam(required = false) String answer,
+                                     @RequestParam(required = false) Long lessonId,
+                                     @RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(required = false) Long editId,
+                                     Model model) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<QuestionResponseDTO> questionsPage = questionService.searchQuestions(answer, lessonId, pageable);
 
-    // Lấy câu hỏi theo ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Question> getQuestionById(@PathVariable Long id) {
-        Optional<Question> question = questionService.getQuestionById(id);
-        return question.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+        model.addAttribute("questions", questionsPage.getContent());
+        model.addAttribute("lessons", lessonService.getAllLessons());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", questionsPage.getTotalPages());
+        model.addAttribute("activePage", "questions");
+        model.addAttribute("questionDTO", new QuestionDTO());
+        model.addAttribute("editQuestionDTO", new QuestionDTO());
+        model.addAttribute("editQuestionId", editId);
+        model.addAttribute("searchAnswer", answer);
+        model.addAttribute("searchLessonId", lessonId);
 
-    // Thêm mới câu hỏi
-    @PostMapping
-    public ResponseEntity<Question> createQuestion(@RequestBody Question question) {
-        Question createdQuestion = questionService.createQuestion(question);
-        return ResponseEntity.ok(createdQuestion);
-    }
-
-    // Cập nhật câu hỏi
-    @PutMapping("/{id}")
-    public ResponseEntity<Question> updateQuestion(@PathVariable Long id, @RequestBody Question questionDetails) {
-        try {
-            Question updatedQuestion = questionService.updateQuestion(id, questionDetails);
-            return ResponseEntity.ok(updatedQuestion);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+        if (editId != null) {
+            Optional<Question> questionToEdit = questionService.getQuestionById(editId);
+            if (questionToEdit.isPresent()) {
+                Question q = questionToEdit.get();
+                QuestionDTO editDTO = new QuestionDTO(q.getQuestionId(), q.getUrl(), q.getAnswer(), q.getLesson().getLessonId());
+                model.addAttribute("editQuestionDTO", editDTO);
+            }
         }
+        return "questions/management";
     }
 
-    // Xóa câu hỏi
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteQuestion(@PathVariable Long id) {
+    @PostMapping
+    public String createQuestion(@ModelAttribute QuestionDTO questionDTO) {
+        questionService.createQuestion(questionDTO);
+        return "redirect:/questions";
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateQuestion(@PathVariable Long id, @ModelAttribute QuestionDTO questionDTO) {
+        questionService.updateQuestion(id, questionDTO);
+        return "redirect:/questions";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteQuestion(@PathVariable Long id) {
         questionService.deleteQuestion(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/questions";
     }
 }
