@@ -1,0 +1,67 @@
+package com.project.englishweb.config;
+
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
+
+import java.security.Key;
+import java.util.Date;
+
+@Component
+public class JwtUtil {
+
+    // Khóa bảo mật được lấy từ biến môi trường thay vì hard-code trong mã nguồn
+    private static final String SECRET_KEY = System.getenv("JWT_SECRET_KEY"); // Sử dụng biến môi trường cho bảo mật
+    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 giờ
+
+    private final Key key;
+
+    public JwtUtil() {
+        // Đảm bảo khóa bảo mật đủ dài cho thuật toán HS256
+        if (SECRET_KEY == null || SECRET_KEY.length() < 32) {
+            throw new IllegalArgumentException("SECRET_KEY must be at least 256 bits");
+        }
+        this.key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    }
+
+    // Tạo JWT với tên người dùng
+    public String generateToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    // Lấy tên người dùng từ token
+    public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    // Kiểm tra tính hợp lệ của token
+    public boolean validateToken(String token, String username) {
+        String extractedUsername = extractUsername(token);
+        return (extractedUsername.equals(username) && !isTokenExpired(token));
+    }
+
+    // Kiểm tra xem token đã hết hạn chưa
+    private boolean isTokenExpired(String token) {
+        Date expiration = extractAllClaims(token).getExpiration();
+        return expiration.before(new Date());
+    }
+
+    // Trích xuất toàn bộ các claims từ token
+    private Claims extractAllClaims(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (JwtException e) {
+            // Nếu token không hợp lệ hoặc hết hạn, throw lỗi
+            throw new IllegalArgumentException("Invalid or expired JWT token", e);
+        }
+    }
+}

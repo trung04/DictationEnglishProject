@@ -1,0 +1,34 @@
+package com.project.englishweb.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+public class SecurityConfig {
+
+    private final JwtUtil jwtUtil;
+
+    public SecurityConfig(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests(auth -> auth
+                        .requestMatchers("/api/user/account").authenticated()  // Yêu cầu xác thực với API này
+                        .anyRequest().permitAll()  // Các request khác không cần xác thực
+                )
+                .csrf(csrf -> csrf.disable())  // Tắt CSRF để tránh lỗi khi gửi POST request
+                .formLogin(form -> form.disable()) // Tắt trang login
+                .httpBasic(httpBasic -> httpBasic.disable()); // Tắt xác thực HTTP Basic
+
+        // Thêm JwtAuthenticationFilter vào chuỗi filter của Spring Security
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+}

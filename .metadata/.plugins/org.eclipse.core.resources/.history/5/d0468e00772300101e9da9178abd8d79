@@ -1,0 +1,114 @@
+package com.project.englishweb.Controller.API;
+
+import com.project.englishweb.DTO.ChangeEmailRequest;
+import com.project.englishweb.DTO.ChangePasswordRequest;
+import com.project.englishweb.DTO.UserAccountDTO;
+import com.project.englishweb.DTO.UserPublicProfileDTO;
+import com.project.englishweb.Service.API.UserApiService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+
+import java.nio.charset.StandardCharsets;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/user")
+@CrossOrigin(origins = "http://localhost:3000")
+public class UserApiController {
+
+    private final UserApiService userApiService;
+    private final String secretKey = "yourSecretKey"; 
+
+    @Autowired
+    public UserApiController(UserApiService userApiService) {
+        this.userApiService = userApiService;
+    }
+
+    // Lấy thông tin tài khoản của người dùng
+    @GetMapping("/account-info")
+    public ResponseEntity<?> getAccountInfo(@RequestHeader(value = "Authorization", required = false) String token) {
+        if (token == null || !token.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header");
+        }
+
+        try {
+            String username = extractUsernameFromToken(token);
+            UserAccountDTO accountInfo = userApiService.getAccountInfo(username);
+            return ResponseEntity.ok(accountInfo);
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token has expired");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid token");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+        }
+    }
+
+
+    private String extractUsernameFromToken(String token) {
+        try {
+            String pureToken = token.replaceFirst("^Bearer ", "").trim();
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
+                    .build()
+                    .parseClaimsJws(pureToken)
+                    .getBody();
+            return claims.getSubject();
+        } catch (ExpiredJwtException e) {
+            throw e;
+        } catch (Exception e) {
+            System.out.println("Error parsing JWT: " + e.getMessage());
+            throw new RuntimeException("Invalid token");
+        }
+    }
+
+
+    // Lấy thông tin hồ sơ công khai của người dùng
+    @GetMapping("/public-profile/{username}")
+    public ResponseEntity<UserPublicProfileDTO> getPublicProfile(@PathVariable String username) {
+        try {
+            UserPublicProfileDTO publicProfile = userApiService.getPublicProfile(username);
+            return ResponseEntity.ok(publicProfile);
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(null); // User not found
+        }
+    }
+
+    // Đổi mật khẩu
+    @PostMapping("/update-password")
+    public ResponseEntity<String> updatePassword(@RequestHeader(value = "Authorization", required = false) String token,
+                                                 @RequestBody ChangePasswordRequest request) {
+        if (token == null || !token.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("Unauthorized: No token provided.");
+        }
+
+        try {
+            userApiService.changePassword(token, request);
+            return ResponseEntity.ok("Đổi mật khẩu thành công!");
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("Đổi mật khẩu thất bại!");
+        }
+    }
+
+    // Đổi email
+    @PostMapping("/update-email")
+    public ResponseEntity<String> updateEmail(@RequestHeader(value = "Authorization", required = false) String token,
+                                              @RequestBody ChangeEmailRequest request) {
+        if (token == null || !token.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("Unauthorized: No token provided.");
+        }
+
+        try {
+            userApiService.changeEmail(token, request);
+            return ResponseEntity.ok("Đổi email thành công!");
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("Đổi email thất bại!");
+        }
+    }
+}
