@@ -2335,3 +2335,6 @@ org.eclipse.core.runtime.CoreException: Launch configuration EnglishwebApplicati
 2025-04-27 23:26:32,030 [Worker-2: Launching EnglishwebApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 30 resources from src\main\resources to target\classes
 2025-04-27 23:26:32,045 [Worker-2: Launching EnglishwebApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\ADMIN\git\DictationEnglishProject\back-end\src\test\resources
 2025-04-27 23:45:33,458 [Worker-3: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2025-04-27 23:54:39,205 [Worker-23: Launching EnglishwebApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-04-27 23:54:39,220 [Worker-23: Launching EnglishwebApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 30 resources from src\main\resources to target\classes
+2025-04-27 23:54:39,231 [Worker-23: Launching EnglishwebApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\ADMIN\git\DictationEnglishProject\back-end\src\test\resources
