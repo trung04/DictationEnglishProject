@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>Question Management</title>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <th:block th:replace="components/header :: header"></th:block>
+    <th:block th:replace="components/aside :: aside"></th:block>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>Quản lý câu hỏi</h1>
+        </section>
+        <section class="content" layout:fragment="content">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title" th:if="${editQuestionId == null}">Questions List</h3>
+                    <h3 class="box-title" th:if="${editQuestionId != null}">Edit Question</h3>
+                    <div class="box-tools pull-right">
+                        <button id="showCreateFormBtn" class="btn btn-success btn-sm"
+                                onclick="document.getElementById('createQuestionFormContainer').style.display='block'; this.style.display='none';"
+                                th:if="${editQuestionId == null}">
+                            Add New Question
+                        </button>
+                        <a th:if="${editQuestionId != null}" th:href="@{/questions}" class="btn btn-default btn-sm">Back</a>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <!-- FORM TẠO MỚI -->
+                    <div id="createQuestionFormContainer" style="display: none;" th:if="${editQuestionId == null}">
+                        <h3>Add New Question</h3>
+                        <form role="form" th:action="@{/questions}" method="post" th:object="${questionDTO}">
+                            <div class="form-group">
+                                <label>URL</label>
+                                <input type="text" class="form-control" th:field="*{url}" required/>
+                            </div>
+                            <div class="form-group">
+                                <label>Answer</label>
+                                <textarea class="form-control" th:field="*{answer}" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Lesson</label>
+                                <select class="form-control" th:field="*{lessonId}" required>
+                                    <option value="">--Select Lesson--</option>
+                                    <option th:each="lesson : ${lessons}"
+                                            th:value="${lesson.lessonId}"
+                                            th:text="${lesson.title}"></option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Question</button>
+                            <button type="button" class="btn btn-default"
+                                    onclick="document.getElementById('createQuestionFormContainer').style.display='none'; document.getElementById('showCreateFormBtn').style.display='inline-block';">
+                                Cancel
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- FORM SỬA -->
+                    <div th:if="${editQuestionId != null}">
+                        <h3>Edit Question</h3>
+                        <form role="form" th:action="@{/questions/update/{id}(id=${editQuestionId})}" method="post" th:object="${editQuestionDTO}">
+                            <div class="form-group">
+                                <label>URL</label>
+                                <input type="text" class="form-control" th:field="*{url}" required/>
+                            </div>
+                            <div class="form-group">
+                                <label>Answer</label>
+                                <textarea class="form-control" th:field="*{answer}" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Lesson</label>
+                                <select class="form-control" th:field="*{lessonId}" required>
+                                    <option value="">--Select Lesson--</option>
+                                    <option th:each="lesson : ${lessons}"
+                                            th:value="${lesson.lessonId}"
+                                            th:text="${lesson.title}"
+                                            th:selected="${lesson.lessonId == editQuestionDTO.lessonId}"></option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <a th:href="@{/questions}" class="btn btn-default">Cancel</a>
+                        </form>
+                    </div>
+
+                    <!-- DANH SÁCH CÂU HỎI -->
+                    <div th:if="${editQuestionId == null}">
+                        <!--<form method="get" th:action="@{/questions}" class="search-form">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <label for="searchAnswer" class="mr-2">Answer:</label>
+                                    <input type="text" class="form-control form-control-sm" id="searchAnswer" name="answer" th:value="${searchAnswer}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="searchLesson" class="mr-2">Lesson:</label>
+                                    <select class="form-control form-control-sm" id="searchLesson" name="lessonId">
+                                        <option value="">All Lessons</option>
+                                        <option th:each="lesson : ${lessons}"
+                                                th:value="${lesson.lessonId}"
+                                                th:text="${lesson.title}"
+                                                th:selected="${lesson.lessonId == searchLessonId}"></option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-sm">Search</button>
+                            </div>
+                        </form> -->
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>URL</th>
+                                <th>Answer</th>
+                                <th>Lesson</th>
+                                <th>Operation</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="question : ${questions}">
+                                <td><a th:href="${question.url}" th:text="${question.url}" target="_blank"></a></td>
+                                <td th:text="${question.answer}"></td>
+                                <td th:text="${question.lessonName}"></td>
+                                <td>
+                                    <a th:href="@{/questions(editId=${question.questionId})}" class="btn btn-warning btn-sm">Edit</a>
+                                    <a th:href="@{/questions/delete/{id}(id=${question.questionId})}" class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Delete</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- PHÂN TRANG -->
+                        <div class="box-footer clearfix">
+                            <ul class="pagination pagination-sm no-margin pull-right">
+                                <li th:if="${currentPage > 0}">
+                                    <a th:href="@{/questions(page=${currentPage - 1}, answer=${searchAnswer}, lessonId=${searchLessonId})}">&laquo;</a>
+                                </li>
+                                <li th:each="page : ${#numbers.sequence(0, totalPages - 1)}"
+                                    th:class="${currentPage == page ? 'active' : ''}">
+                                    <a th:href="@{/questions(page=${page}, answer=${searchAnswer}, lessonId=${searchLessonId})}" th:text="${page + 1}"></a>
+                                </li>
+                                <li th:if="${currentPage < totalPages - 1}">
+                                    <a th:href="@{/questions(page=${currentPage + 1}, answer=${searchAnswer}, lessonId=${searchLessonId})}">&raquo;</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>
