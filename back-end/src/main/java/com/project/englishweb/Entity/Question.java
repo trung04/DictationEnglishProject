@@ -32,24 +32,24 @@ public class Question {
         return url;
     }
     
-    public void setUrl(String url) {
-        this.url = url;
-    }
+    // public void setUrl(String url) {
+    //     this.url = url;
+    // }
     
-    public String getAnswer() {
-        return answer;
-    }
+    // public String getAnswer() {
+    //     return answer;
+    // }
     
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
+    // public void setAnswer(String answer) {
+    //     this.answer = answer;
+    // }
     
-    public Lesson getLesson() {
-        return lesson;
-    }
+    // public Lesson getLesson() {
+    //     return lesson;
+    // }
     
-    public void setLesson(Lesson lesson) {
-        this.lesson = lesson;
-    }
+    // public void setLesson(Lesson lesson) {
+    //     this.lesson = lesson;
+    // }
     
 }

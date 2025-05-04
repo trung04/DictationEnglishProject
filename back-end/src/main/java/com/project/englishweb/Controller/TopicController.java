@@ -1,63 +1,99 @@
 package com.project.englishweb.Controller;
 
+import com.project.englishweb.DTO.TopicDTO;
 import com.project.englishweb.Entity.Topic;
+import com.project.englishweb.Entity.Level;
 import com.project.englishweb.Service.TopicService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import com.project.englishweb.Service.LevelService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
-@RestController
+@Controller
 @RequestMapping("/topics")
+@RequiredArgsConstructor
+@Slf4j
 public class TopicController {
 
     private final TopicService topicService;
+    private final LevelService levelService;
 
-    @Autowired
-    public TopicController(TopicService topicService) {
-        this.topicService = topicService;
-    }
-
-    // Lấy tất cả Topics
     @GetMapping
-    public ResponseEntity<List<Topic>> getAllTopics() {
-        List<Topic> topics = topicService.getAllTopics();
-        return ResponseEntity.ok(topics);
-    }
+    public String topicManagement(@RequestParam(required = false) String title,
+                                @RequestParam(required = false) String levelName,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(required = false) Long editId,
+                                @RequestParam(required = false) Long levelId,
+                                Model model) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Topic> topicsPage;
 
-    // Lấy Topic theo ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Topic> getTopicById(@PathVariable Long id) {
-        Optional<Topic> topic = topicService.getTopicById(id);
-        return topic.map(ResponseEntity::ok)
-                    .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    // Thêm mới một Topic
-    @PostMapping
-    public ResponseEntity<Topic> createTopic(@RequestBody Topic topic) {
-        Topic createdTopic = topicService.createTopic(topic);
-        return ResponseEntity.ok(createdTopic);
-    }
-
-    // Cập nhật Topic theo ID
-    @PutMapping("/{id}")
-    public ResponseEntity<Topic> updateTopic(@PathVariable Long id, @RequestBody Topic topicDetails) {
-        try {
-            Topic updatedTopic = topicService.updateTopic(id, topicDetails);
-            return ResponseEntity.ok(updatedTopic);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+        if (levelId != null) {
+            model.addAttribute("levels", levelService.getLevelById(levelId));
+        } else {
+            model.addAttribute("levels", levelService.getAllLevels());
         }
+
+        if (title != null || levelName != null) {
+            topicsPage = topicService.searchTopics(title, levelName, pageable);
+            model.addAttribute("searchTitle", title);
+            model.addAttribute("searchLevelName", levelName);
+        } else {
+            topicsPage = topicService.getAllTopics(pageable);
+        }
+
+        model.addAttribute("topics", topicsPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", topicsPage.getTotalPages());
+        model.addAttribute("activePage", "topics");
+        model.addAttribute("topicDTO", new TopicDTO());
+        model.addAttribute("editTopicDTO", new TopicDTO());
+        model.addAttribute("editTopicId", editId);
+
+        if (editId != null) {
+            Topic topicToEdit = topicService.getTopicById(editId);
+            if (topicToEdit != null) {
+                TopicDTO editDTO = new TopicDTO();
+                editDTO.setTitle(topicToEdit.getTitle());
+                editDTO.setDetail(topicToEdit.getDetail());
+                editDTO.setLevelId(topicToEdit.getLevel().getLevelId());
+                if (topicToEdit.getParent() != null) {
+                    editDTO.setParentId(topicToEdit.getParent().getTopicId());
+                }
+                model.addAttribute("editTopicDTO", editDTO);
+            }
+        }
+
+        try {
+            // code lấy dữ liệu
+        } catch (Exception e) {
+            log.error("Error in topicManagement: ", e);
+            throw e; // hoặc trả về view lỗi tùy ý
+        }
+
+        return "topics/management";
     }
 
-    // Xóa Topic theo ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTopic(@PathVariable Long id) {
+    @PostMapping
+    public String createTopic(@ModelAttribute TopicDTO topicDTO) {
+        topicService.createTopic(topicDTO);
+        return "redirect:/topics";
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateTopic(@PathVariable Long id, @ModelAttribute TopicDTO topicDTO) {
+        topicService.updateTopic(id, topicDTO);
+        return "redirect:/topics";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteTopic(@PathVariable Long id) {
         topicService.deleteTopic(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/topics";
     }
 }

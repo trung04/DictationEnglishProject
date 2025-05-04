@@ -83,10 +83,31 @@
                 </a>
             </li>
 
+             <!--Topic-->
+             <li class="treeview" th:classappend="${activePage == 'topics'} ? 'active menu-open'">
+			    <a href="#">
+			        <i class="fa fa-topic"></i> <span>Topic</span>
+			        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+			    </a>
+			    <ul class="treeview-menu">
+			        <li th:classappend="${activePage == 'topics'} ? 'active'">
+			            <a th:href="@{/topics}"><i class="fa fa-circle-o"></i> All TOPICS</a>
+			        </li>
+			    </ul>
+			</li>
 
-
-
-
+            <!--Question-->
+            <li class="treeview" th:classappend="${activePage == 'questions'} ? 'active menu-open'">
+			    <a href="#">
+			        <i class="fa fa-question"></i> <span>Question</span>
+			        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+			    </a>
+			    <ul class="treeview-menu">
+			        <li th:classappend="${activePage == 'topics'} ? 'active'">
+			            <a th:href="@{/questions}"><i class="fa fa-circle-o"></i> All Questions</a>
+			        </li>
+			    </ul>
+			</li>
 
 
         </ul>
