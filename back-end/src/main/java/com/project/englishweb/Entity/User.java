@@ -2,7 +2,7 @@ package com.project.englishweb.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -28,6 +28,10 @@ public class User {
     private int activeDays;
     private int activeHours;
 
+    // Thêm trường createdAt
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Progress> progresses;
 
@@ -36,4 +40,12 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Note> notes;
+
+    // Set giá trị createdAt khi tạo mới người dùng
+    @PrePersist
+    public void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
 }
