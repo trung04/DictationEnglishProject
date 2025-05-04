@@ -1,0 +1,9 @@
+# Bỏ qua thư mục .metadata của Eclipse
+.metadata/
+*.log
+*.class
+bin/
+target/
+.settings/
+.project
+.classpath
