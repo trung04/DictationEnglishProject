@@ -24,20 +24,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(AuthRequest request) {
-        User user = userRepository.findByUsername(request.getUsername())
-                 .orElseThrow(() -> new RuntimeException("Invalid username or password"));
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
 
+        
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid username or password");
+            throw new RuntimeException("Invalid email or password");
         }
 
         String token = jwtUtil.generateToken(user.getUsername());
         return new AuthResponse(token);
     }
 
+
     @Override
     public void logout(String token) {
-        // Không cần thêm gì cho logout trong trường hợp sử dụng JWT (frontend tự xóa token)
+        
     }
 
     @Override

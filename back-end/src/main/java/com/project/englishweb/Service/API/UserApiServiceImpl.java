@@ -61,14 +61,10 @@ public class UserApiServiceImpl implements UserApiService {
         String username = jwtUtil.extractUsername(token.replace("Bearer ", ""));
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            throw new RuntimeException("Old password is incorrect");
-        }
-
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
+
 
     @Override
     public void changeEmail(String token, ChangeEmailRequest request) {
