@@ -13,4 +13,6 @@ public interface UserService {
     void createUser(UserDTO userDTO);
     void updateUser(Long id, UserDTO userDTO);
     void deleteUser(Long id);
+    public int addTime(Long id,int second);
+    public long getTime(Long id);
 }

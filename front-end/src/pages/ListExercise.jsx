@@ -6,20 +6,28 @@ import axios from "axios";
 const ListExercise = () => {
   const { id } = useParams();
   const [topics, setTopics] = useState([]);
+  const [parentTopic, setParentTopic] = useState([]);
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/api/topics/parentTopic/${id}`)
-      .then((response) => {
-        setTopics(response.data);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi lấy danh sách topics:", error);
-      });
-  }, []);
+    const fetchData = async () => {
+      try {
+        const res1 = await axios.get(
+          `http://localhost:8080/api/topics/parentTopic/${id}`
+        );
+        const res2 = await axios.get(`http://localhost:8080/api/topics/${id}`);
+
+        setTopics(res1.data);
+        setParentTopic(res2.data);
+      } catch (error) {
+        console.error("Lỗi khi gọi API:", error);
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   return (
     <>
-      <Navbar2 />
+      <Navbar2 parentTopic={parentTopic} />
       <div className="container-lg">
         <div className="mb-4">
           <ToggleDown topics={topics} />

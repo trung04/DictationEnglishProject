@@ -1,98 +1,113 @@
+import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 const Register = () => {
+  const [formData, setFormData] = useState({
+    nickname: "",
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Gửi yêu cầu đăng ký tới API backend
+      const response = await axios.post(
+        "http://localhost:8080/api/auth/register",
+        {
+          username: formData.nickname,
+          email: formData.email,
+          password: formData.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // Nếu cần gửi token thì thêm dòng dưới:
+            // "Authorization": `Bearer ${yourAccessToken}`
+          },
+        }
+      );
+      window.location.reload();
+      // Nếu đăng ký thành công, chuyển hướng tới trang đăng nhập
+      navigate("/login");
+    } catch (err) {
+      console.log(err.response.data.message);
+      // Nếu có lỗi, hiển thị thông báo lỗi
+      setError(err.response.data.message);
+    }
+  };
+
   return (
     <>
       <main className="container-lg">
         <div className="message"></div>
-
         <div className="row mb-3">
           <div className="offset-md-3 col-sm-6 border rounded shadow p-3">
             <h1 className="fs-2 mb-4">Create an account</h1>
-            <div className="">
-              <div className="px-2">
-                <div
-                  id="g_id_onload"
-                  data-client_id="137224404338-b39pf1qkslvhhlhllfque37qeljrd7sa.apps.googleusercontent.com"
-                  data-callback="handleCredentialResponse"
-                ></div>
-                <div className="g_id_signin" data-type="standard">
-                  <div
-                    className="S9gUrf-YoZ4jf"
-                    style={{ position: "relative" }}
-                  >
-                    <div></div>
-                  </div>
-                </div>
-                <div className="text-danger d-none" id="google-signin-error">
-                  An error happened, please try again later!
-                </div>
-              </div>
-            </div>
-
-            <hr />
-            <h4>Or enter your information</h4>
-            <form method="post" novalidate="novalidate">
-              <div novalidate="novalidate">
-                <div className="mb-3">
-                  <label for="displayName" className="form-label required">
-                    Nickname
-                  </label>
-                  <input
-                    type="text"
-                    id="displayName"
-                    name="displayName"
-                    required="required"
-                    data-test="register-username"
-                    className="form-control"
-                  />{" "}
-                </div>
-                <div className="mb-3">
-                  <label for="email" className="form-label required">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required="required"
-                    data-test="register-email"
-                    className="form-control"
-                  />{" "}
-                </div>
-                <div className="mb-3">
-                  <label for="password" className="form-label required">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    required="required"
-                    className="form-control"
-                  />{" "}
-                </div>
-                <div className="mb-3">
-                  <button
-                    type="submit"
-                    id="submit"
-                    name="submit"
-                    className="btn-success btn"
-                    data-test="register-submit-btn"
-                  >
-                    Submit
-                  </button>
-                </div>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label htmlFor="nickname" className="form-label required">
+                  Nickname
+                </label>
                 <input
-                  type="hidden"
-                  id="_token"
-                  name="_token"
-                  value="b95caaaec48d6.LFh9sOuaNM1iWE1FjRpm7W9v9vNOroFkCDqi-yRyiDo.YGgvnZn4A6c1MRIyuV02oTAAwpYW1MIGe3jVih0063JVaAf3gvhd-lEdOg"
+                  type="text"
+                  id="nickname"
+                  name="nickname"
+                  value={formData.nickname}
+                  onChange={handleInputChange}
+                  required
+                  className="form-control"
                 />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="email" className="form-label required">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  className="form-control"
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label required">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                  className="form-control"
+                />
+              </div>
+              {error && <div className="text-danger">{error}</div>}
+              <div className="mb-3">
+                <button type="submit" className="btn-success btn">
+                  Submit
+                </button>
               </div>
             </form>
             <p className="pt-3">
               <span className="align-middle">
-                Had an account already?
-                <a href="/login">Login here</a>
+                Had an account already? <a href="/login">Login here</a>
               </span>
             </p>
           </div>
@@ -101,4 +116,5 @@ const Register = () => {
     </>
   );
 };
+
 export default Register;

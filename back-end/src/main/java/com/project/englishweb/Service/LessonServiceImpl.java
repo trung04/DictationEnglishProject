@@ -30,6 +30,30 @@ public class LessonServiceImpl implements LessonService {
         // Tìm Level từ levelId
         Level level = levelRepository.findById(lessonDTO.getLevelId())
                 .orElseThrow(() -> new NoSuchElementException("Level not found"));
+        String[] lines = lessonDTO.getTranscript().split("\n");
+        StringBuilder transcriptString = new StringBuilder();
+        String start = "0:00";  
+        int id = 1;
+        // Duyệt qua từng dòng transcript
+        for (String line : lines) {
+            String[] parts = line.split(" ", 2);  
+            if (parts.length < 2) {
+                continue;  
+            }
+
+            String end = parts[0];  
+            String text = parts[1];  
+            transcriptString.append("Id: ").append(String.valueOf(id))
+                    .append(" Start: ").append(start)
+                    .append(" End: ").append(end)
+                    .append(" Text: ").append(text)
+                    .append("\n");
+
+            start = end;
+            id++;
+        }
+
+        String transcript = transcriptString.toString();
 
         // Tạo bài học mới
         Lesson lesson = new Lesson();
@@ -37,10 +61,11 @@ public class LessonServiceImpl implements LessonService {
         lesson.setLevel(level);  // Gán level từ DTO
         lesson.setURL(lessonDTO.getURL());
         lesson.setTopic(topic);
-
         lesson.setLevelName(level.getName());
+        lesson.setTranscript(transcript); 
+        lesson.setQuestionCount(lessonDTO.getQuestionCount());
 
-        return lessonRepository.save(lesson);  // Lưu bài học vào cơ sở dữ liệu
+        return lessonRepository.save(lesson); 
     }
 
     @Override
@@ -74,7 +99,30 @@ public class LessonServiceImpl implements LessonService {
         lesson.setLevelName(level.getName());
         lesson.setURL(lessonDTO.getURL());
         lesson.setTopic(topic);
+        String[] lines = lessonDTO.getTranscript().split("\n");
+        StringBuilder transcriptString = new StringBuilder();
+        String start = "0:00";  
+        int ID = 1;
+        // Duyệt qua từng dòng transcript
+        for (String line : lines) {
+            String[] parts = line.split(" ", 2);  
+            if (parts.length < 2) {
+                continue; 
+            }
 
+            String end = parts[0];  
+            String text = parts[1];
+            transcriptString.append("Id: ").append(String.valueOf(ID))
+                    .append(" Start: ").append(start)
+                    .append(" End: ").append(end)
+                    .append(" Text: ").append(text)
+                    .append("\n");
+            start = end;
+            ID++;
+        }
+        String transcript = transcriptString.toString();
+        lesson.setTranscript(transcript);
+        lesson.setQuestionCount(lessonDTO.getQuestionCount());
         return lessonRepository.save(lesson);
     }
 

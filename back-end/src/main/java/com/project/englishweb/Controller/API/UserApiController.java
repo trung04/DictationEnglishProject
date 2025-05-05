@@ -5,6 +5,7 @@ import com.project.englishweb.DTO.ChangePasswordRequest;
 import com.project.englishweb.DTO.UserAccountDTO;
 import com.project.englishweb.DTO.UserPublicProfileDTO;
 import com.project.englishweb.Service.API.UserApiService;
+import com.project.englishweb.Service.UserService;
 import com.project.englishweb.config.JwtUtil;
 
 import io.jsonwebtoken.Jwts;
@@ -12,6 +13,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +25,25 @@ import org.springframework.web.bind.annotation.*;
 public class UserApiController {
 
     private final UserApiService userApiService;
-    private final String secretKey = "yourSecretKey"; 
-
+    private  final UserService userService;
+    private final String secretKey = "yourSecretKey";
     @Autowired
-    public UserApiController(UserApiService userApiService) {
+    public UserApiController(UserApiService userApiService, UserService userService) {
         this.userApiService = userApiService;
+        this.userService = userService;
     }
+
+    @PostMapping("/add-time")
+    public int addTime(@RequestParam Long userId, @RequestParam(defaultValue = "10") int seconds) {
+        return userService.addTime(userId, seconds);
+    }
+    @GetMapping("/hello")
+    public String hello(){
+        return "haha";
+    }
+
+
+
 
     // Lấy thông tin tài khoản của người dùng
     @Autowired
@@ -65,16 +80,16 @@ public class UserApiController {
         try {
             System.out.println("Extracting username from token: " + token);
 
-            
+
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8)) // Đảm bảo rằng secretKey chính xác
                     .build()
                     .parseClaimsJws(token.replace("Bearer ", "")) // Loại bỏ "Bearer " prefix
                     .getBody();
-            
+
             String username = claims.getSubject();
             System.out.println("Extracted username: " + username);
-            
+
             return username;
         } catch (ExpiredJwtException e) {
             System.out.println("Token expired: " + e.getMessage());

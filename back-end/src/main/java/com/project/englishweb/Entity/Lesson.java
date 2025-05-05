@@ -27,6 +27,9 @@ public class Lesson {
 
     private String URL;
 
+//    @Column(name = "transcript")
+//    private String transcript;
+
     @ManyToOne
     @JoinColumn(name = "topic_id", nullable = false) // Khóa ngoại
     @JsonBackReference
@@ -38,5 +41,9 @@ public class Lesson {
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Progress> progresses;
 
-
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String transcript;
+    @Column(nullable = false)
+    private int questionCount;
 }

@@ -5,6 +5,37 @@ import YoutubeFrame from "../components/UI/YoutubeFrame";
 import ToggleDownSimple from "../components/UI/ToggleDownSimple";
 import Input from "../components/UI/Input";
 import axios from "axios";
+// dữ liệu mẫu
+
+// Hàm so sánh văn bản và tìm các từ không khớp
+const compareText = (inputText, correctText) => {
+  const inputWords = inputText
+    .toLowerCase()
+    .replace(/^[\s\W_]+|[\s\W_]+$/g, "")
+    .split(/\s+/)
+
+    .filter((word) => word.length > 0);
+  const correctWords = correctText
+    .toLowerCase()
+    .replace(/^[\s\W_]+|[\s\W_]+$/g, "")
+    .split(/\s+/)
+
+    .filter((word) => word.length > 0);
+  const errors = [];
+
+  for (let i = 0; i < Math.min(inputWords.length, correctWords.length); i++) {
+    if (inputWords[i] !== correctWords[i]) {
+      errors.push({ index: i, word: correctWords[i] });
+    }
+  }
+
+  return {
+    errors,
+    inputLength: inputWords.length,
+    correctLength: correctWords.length,
+  };
+};
+
 const DetailExercise = () => {
   const { id } = useParams();
   const [sizeVideo, setSizeVieo] = useState();
@@ -14,29 +45,176 @@ const DetailExercise = () => {
   const [isHidden, setIsHidden] = useState(false);
   //trạng thái làm bài
   const [showInput, setShowInput] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(false);
-  //Văn bản mẫu
-  const [inputText, setInputText] = useState("");
-  const correctText = "Hello world this is a test";
-  const correctWords = correctText.split(" ");
-  const inputWords = inputText.trim().split(" ");
+  // const inputWords = inputText.trim().split(" ");
   const [lesson, setLesson] = useState([]);
+
+  //demo
+  const [challengeId, setChallengeId] = useState(1);
+  const [inputText, setInputText] = useState("");
+  const [result, setResult] = useState(null);
+  const [errors, setErrors] = useState([]);
+  const [inputLength, setInputLength] = useState(0);
+  const [correctLength, setCorrectLength] = useState(0);
+  const [hideUnreached, setHideUnreached] = useState(true);
+  const [challenges, setChallenges] = useState([]);
+
+  //thoi gian chinh sua video YoutubeFrame
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(2);
+
+  //end demo
+
+  //hàm kiểm tra đáp án có trùng hay không
+  const handleCheck = () => {
+    // Tìm challenge tương ứng với ID nhập vào
+    const challenge = challenges.find((ch) => ch.id == challengeId);
+
+    if (!challenge) {
+      setResult("Không tìm thấy challenge!");
+      setErrors([]);
+      setInputLength(0);
+      setCorrectLength(0);
+      return;
+    }
+
+    const { errors, inputLength, correctLength } = compareText(
+      inputText,
+      challenge.text
+    );
+    setErrors(errors);
+    setInputLength(inputLength);
+    setCorrectLength(correctLength);
+
+    if (inputText.trim().toLowerCase() === challenge.text.toLowerCase()) {
+      setResult("Correct");
+    } else {
+      setResult("Incorrect");
+    }
+  };
+  //hàm chuyển thành giây
+  const convertTimeToSeconds = (time) => {
+    const [minutes, seconds] = time.split(":").map(Number);
+    return minutes * 60 + seconds;
+  };
+  //hàm xử lý bắt đầu làm bài
+  const startDictation = async () => {
+    const challenge = challenges.find((ch) => ch.id == challengeId);
+    const startTime = await convertTimeToSeconds(challenge.start);
+    const endTime = await convertTimeToSeconds(challenge.end);
+    // Cập nhật các state sau khi tính toán thời gian
+    setStartTime(startTime);
+    setEndTime(endTime);
+
+    setShowInput(true);
+  };
+
+  //Hàm xử lý đổi challenge
+  // const handleChangeChallenge = (status) => {
+  //   if (status == 0 && challengeId > 1) {
+  //     setChallengeId(challengeId - 1);
+  //   }
+  //   if (status == 1 && challengeId < challenges.length) {
+  //     setChallengeId(challengeId + 1);
+  //   }
+  //   const challenge = challenges.find((ch) => ch.id == challengeId);
+  //   setEndTime(convertTimeToSeconds(challenge.end));
+  //   setStartTime(convertTimeToSeconds(challenge.start));
+  //   setResult(null);
+  //   setErrors([]);
+  //   setInputText("");
+  //   setInputLength(0);
+  //   setCorrectLength(0);
+  // };
+
+  //hàm xử l
+  useEffect(() => {
+    const challenge = challenges.find((ch) => ch.id === challengeId);
+    if (challenge) {
+      const start = convertTimeToSeconds(challenge.start);
+      const end = convertTimeToSeconds(challenge.end);
+      setStartTime(start);
+      setEndTime(end);
+      setResult(null);
+      setErrors([]);
+      setInputText("");
+      setInputLength(0);
+      setCorrectLength(0);
+    }
+  }, [challengeId]);
+  const handleChangeChallenge = async (status) => {
+    // Kiểm tra trạng thái và cập nhật challengeId
+    let newChallengeId = challengeId;
+    if (status == 0 && challengeId > 1) {
+      newChallengeId = challengeId - 1;
+    }
+    if (status == 1 && challengeId < challenges.length) {
+      newChallengeId = challengeId + 1;
+    }
+    setChallengeId(newChallengeId);
+  };
+
+  // Hàm hiển thị văn bản với các từ sai được gạch dưới và từ chưa nhập hiển thị là * (nếu bật hideUnreached)
+  const renderTextWithErrors = (text) => {
+    const words = text.split(/\s+/).filter((word) => word.length > 0);
+    return words.map((word, index) => {
+      if (hideUnreached && index >= inputLength) {
+        return (
+          <span key={index} style={{ marginRight: "5px", color: "gray" }}>
+            *
+          </span>
+        );
+      }
+      const isError = errors.some((error) => error.index === index);
+      return (
+        <span
+          key={index}
+          style={{
+            textDecoration: isError ? "underline red" : "none",
+            marginRight: "5px",
+          }}
+        >
+          {word}
+        </span>
+      );
+    });
+  };
+
   useEffect(() => {
     axios
       .get(`http://localhost:8080/api/lessons/${id}`)
       .then((response) => {
         setLesson(response.data);
-        console.log(response.data);
+        setChallenges(JSON.parse(response.data.transcript));
       })
       .catch((error) => {
         console.error("Lỗi khi lấy danh sách topics:", error);
       });
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter") {
+        if (result === "Correct") {
+          handleChangeChallenge(1); // Gọi hàm chuyển câu hỏi
+        } else {
+          // Không làm gì
+          console.log("Kết quả sai, không chuyển câu");
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [result]);
+
+  //hàm xử lý Video
+
   return (
     <>
       <Navbar2 title={lesson.title}></Navbar2>
-
       <div className="container-lg">
         <div className="mb-3">
           <h1 className="fs-5 mb-0 d-inline">
@@ -136,7 +314,12 @@ const DetailExercise = () => {
                   </div>
                 </div>
                 <div className={` ${isHidden ? "d-none" : ""}`}>
-                  <YoutubeFrame url={lesson.url} sizeVideo={sizeVideo} />
+                  <YoutubeFrame
+                    startTime={startTime}
+                    endTime={endTime}
+                    url={lesson.url}
+                    sizeVideo={sizeVideo}
+                  />
                 </div>
               </div>
               <div className="mt-1 d-none d-lg-block">
@@ -160,7 +343,7 @@ const DetailExercise = () => {
                   >
                     <button
                       onClick={() => {
-                        setShowInput(true);
+                        startDictation();
                       }}
                       className="btn btn-lg btn-success"
                     >
@@ -171,17 +354,11 @@ const DetailExercise = () => {
                   <>
                     <div class="d-flex align-items-center flex-wrap">
                       <div class="flex-grow-1 d-flex">
-                        <div class="me-2 d-flex align-items-center">
-                          <button
-                            id="btn-play-yt"
-                            class="btn border-primary rounded text-primary p-1"
-                            style={{ lineHeight: "1" }}
-                          >
-                            <i class="bi bi-play-fill fs-2"></i>
-                          </button>
-                        </div>
                         <div class="d-flex align-items-center">
                           <button
+                            onClick={() => {
+                              handleChangeChallenge(0);
+                            }}
                             id="btn-arrow-left"
                             class="btn btn-sm border-0"
                             disabled=""
@@ -197,13 +374,16 @@ const DetailExercise = () => {
                                 aria-expanded="false"
                                 class="border-0 px-0 none btn btn-none"
                               >
-                                <span>1</span>
+                                <span>{challengeId}</span>
                                 <span> / </span>
                                 <span>55</span>
                               </button>
                             </div>
                           </div>
                           <button
+                            onClick={() => {
+                              handleChangeChallenge(1);
+                            }}
                             id="btn-arrow-right"
                             class="btn btn-sm border-0"
                             style={{ fontSize: "1rem" }}
@@ -218,18 +398,13 @@ const DetailExercise = () => {
                         </button>
                       </div>
                     </div>
-                    <Input onInputChange={setInputText} />
+
+                    <Input inputText={inputText} onInputChange={setInputText} />
                     <div class="d-flex align-items-center mb-3">
                       <div class="flex-grow-1">
                         <button
                           onClick={() => {
-                            inputWords.map((word, index) => {
-                              if (word != correctWords[index]) {
-                                setIsCorrect(false);
-                                return;
-                              }
-                              setIsCorrect(true);
-                            });
+                            handleCheck();
                           }}
                           id="btn-check"
                           class="btn btn-primary me-3"
@@ -240,10 +415,48 @@ const DetailExercise = () => {
                           Skip
                         </button>
                       </div>
-                      {isCorrect ? "đúng rồi" : "sai rồi"}
-                      <button id="btn-next" class="btn btn-success ms-2 d-none">
-                        Next
-                      </button>
+                      {result == "Correct" && (
+                        <button
+                          id="btn-next"
+                          class="btn btn-success ms-2"
+                          onClick={() => {
+                            handleChangeChallenge(1);
+                          }}
+                        >
+                          Next
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="result-section">
+                      {result && <h3>{result}!</h3>}
+                      {result &&
+                        challenges.find((ch) => ch.id == challengeId) && (
+                          <div>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={hideUnreached}
+                                onChange={(e) =>
+                                  setHideUnreached(e.target.checked)
+                                }
+                              />
+                              Ẩn các từ chưa nhập (hiển thị *)
+                            </label>
+
+                            <p
+                              style={{
+                                wordBreak: "break-word",
+                                whiteSpace: "normal",
+                              }}
+                            >
+                              {renderTextWithErrors(
+                                challenges.find((ch) => ch.id == challengeId)
+                                  .text
+                              )}
+                            </p>
+                          </div>
+                        )}
                     </div>
                   </>
                 )}

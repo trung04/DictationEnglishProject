@@ -1,5 +1,6 @@
 package com.project.englishweb.Controller.API;
 
+import com.project.englishweb.Entity.Lesson;
 import com.project.englishweb.Entity.Topic;
 import com.project.englishweb.Service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,10 @@ public class TopicApiController {
         List<Topic> topics = topicService.findByParentTopicId(id);
         return ResponseEntity.ok(topics);
     }
-
+    @GetMapping("{topicId}")
+    public Topic getTopicById(@PathVariable Long topicId) {
+        return topicService.getTopicById(topicId);
+    }
 
 
 }

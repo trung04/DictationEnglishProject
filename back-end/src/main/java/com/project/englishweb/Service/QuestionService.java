@@ -17,4 +17,5 @@ public interface QuestionService {
     void deleteQuestion(Long id);
     QuestionResponseDTO getQuestionResponseDTO(Question question);
     Page<QuestionResponseDTO> searchQuestions(String answer, Long lessonId, Pageable pageable);
+
 }
