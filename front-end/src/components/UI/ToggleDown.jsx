@@ -22,13 +22,8 @@ const ToggleDown = (props) => {
                         {topic.title}
                       </span>
                       <span className="d-block my-2">
-                        <span
-                          className="border rounded me-2 px-1 text-muted"
-                          data-bs-toggle="tooltip"
-                          data-bs-placement="bottom"
-                          data-bs-original-title="20 lessons never completed."
-                        >
-                          <span>20</span>
+                        <span className="border rounded me-2 px-1 text-muted">
+                          <span>{topic.lessons.length}</span>
                           <i className="bi bi-star star-0"></i>
                         </span>
                       </span>

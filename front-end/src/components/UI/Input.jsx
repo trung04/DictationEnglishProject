@@ -14,8 +14,7 @@ const micButtonStyle = {
   bottom: "-14px",
   right: "8px",
 };
-const Input = ({ onInputChange }) => {
-  const [text, setText] = useState("");
+const Input = ({ onInputChange, inputText }) => {
   return (
     <>
       <div className="my-3 position-relative">
@@ -34,9 +33,8 @@ const Input = ({ onInputChange }) => {
             autoCorrect="off"
             autoCapitalize="off"
             spellCheck="false"
-            value={text}
+            value={inputText}
             onChange={(e) => {
-              setText(e.target.value);
               onInputChange(e.target.value);
             }}
             style={{ height: "76px" }}

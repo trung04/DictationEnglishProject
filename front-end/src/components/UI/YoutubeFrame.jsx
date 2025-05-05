@@ -1,5 +1,75 @@
-import { useEffect, useRef } from "react";
-const YoutubeFrame = (props) => {
+import { useState, useEffect, useRef } from "react";
+import YouTube from "react-youtube";
+import axios from "axios";
+
+const YoutubeFrame = ({ url, startTime, endTime }) => {
+  const playerRef = useRef(null);
+  const videoId = url; // ID video
+  const opts = {
+    height: "100%",
+    width: "100%",
+    playerVars: {
+      autoplay: 0,
+      mute: 0,
+    },
+  };
+  const onReady = (event) => {
+    playerRef.current = event.target;
+  };
+  //hàm xử lý phát video
+  const handlePlayVideo = () => {
+    if (!playerRef.current) return;
+
+    const start = parseInt(startTime, 10);
+    const end = parseInt(endTime, 10);
+    const userId = 1;
+    const playedDuration = end - start;
+    // const token = localStorage.getItem("token"); // hoặc từ React Context
+
+    // Gọi API có gửi token
+    axios
+      .post("http://localhost:8080/api/users/add-time", null, {
+        params: {
+          userId: userId,
+          seconds: playedDuration,
+        },
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      })
+      .then((response) => {
+        console.log("Tổng thời gian đã cộng:", response.data);
+      })
+      .catch((error) => {
+        console.log("Lỗi khi cộng thời gian:");
+      });
+
+    playerRef.current.seekTo(start, true);
+    playerRef.current.playVideo();
+
+    const interval = setInterval(() => {
+      const currentTime = playerRef.current.getCurrentTime();
+      if (currentTime >= end) {
+        playerRef.current.pauseVideo();
+        clearInterval(interval);
+      }
+    }, 500);
+  };
+  //hàm xử lý bắt sự kiện ctr
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey && event.key === "Control") {
+        handlePlayVideo();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [startTime, endTime]);
+
   return (
     <>
       <div
@@ -12,12 +82,12 @@ const YoutubeFrame = (props) => {
           overflow: "hidden",
         }}
       >
-        <iframe
-          frameborder="0"
-          allowfullscreen
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          title="How to enter flow state"
+        {" "}
+        <YouTube
+          videoId={videoId}
+          opts={opts}
+          onReady={onReady}
+          className="mt-6"
           style={{
             position: "absolute",
             top: 0,
@@ -25,12 +95,14 @@ const YoutubeFrame = (props) => {
             width: "100%",
             height: "100%",
           }}
-          src={props.url}
-          id="widget2"
-          data-gtm-yt-inspected-16="true"
-          data-gtm-yt-inspected-8="true"
-        ></iframe>
+        />
       </div>
+      <button
+        onClick={handlePlayVideo}
+        className="btn btn-primary bg-green-600  px-6 py-2 rounded hover:bg-green-700"
+      >
+        Play {startTime} {endTime}
+      </button>
     </>
   );
 };

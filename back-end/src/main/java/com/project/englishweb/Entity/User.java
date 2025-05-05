@@ -25,8 +25,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private int activeDays;
-    private int activeHours;
+    private long activeDays;
+    private long activeHours;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Progress> progresses;
@@ -36,4 +36,11 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Note> notes;
+
+    public void addSeconds(long seconds) {
+        this.activeHours += seconds;
+    }
+    public long getTotalSeconds() {
+        return this.activeHours;
+    }
 }

@@ -21,11 +21,11 @@ public class QuestionApiController {
         this.questionService = questionService;
     }
     // Lấy tất cả questions
-    @GetMapping
-    public ResponseEntity<List<Question>> getAllQuestions() {
-        List<Question> questions = questionService.findAll();
-        return ResponseEntity.ok(questions);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<Question>> getAllQuestions() {
+//        List<Question> questions = questionService.findAll();
+//        return ResponseEntity.ok(questions);
+//    }
 }
 
 

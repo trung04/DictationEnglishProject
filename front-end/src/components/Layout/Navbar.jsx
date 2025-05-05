@@ -66,7 +66,6 @@ const Navbar = () => {
                   </Link>
                 </div>
               </li>
-
             </ul>
           </div>
         </div>
@@ -106,20 +105,84 @@ const Navbar = () => {
                   aria-labelledby="#incomplete-lessons-toggle"
                   style={{ width: "300px" }}
                 >
-                  <div className="js-no-incomplete-lessons d-none px-2">
+                  <div className="js-no-incomplete-lessons  px-2">
+                    <div className="p-2 js-user-lesson-item">
+                      <div className="d-flex align-items-center">
+                        <Link
+                          to="/exercises/ielts-listening/cam19-test-2-part-1.1370/listen-and-type"
+                          className="mr-2 text-decoration-none flex-grow-1"
+                          style={{ whiteSpace: "normal" }}
+                        >
+                          Cam19 - Test 2 - Part 1
+                        </Link>
+
+                        <button
+                          className="btn btn-sm js-remove-in-progress-lesson"
+                          data-reset-url="/api/user/reset-lesson/1370?newPosition=0"
+                          title="Remove from this list"
+                        >
+                          <i className="bi bi-x-lg fs-5"></i>
+                        </button>
+                      </div>
+                      <div className="progress" style={{ height: "5px" }}>
+                        <div
+                          className="progress-bar bg-success"
+                          role="progressbar"
+                          aria-valuenow="3.23"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                          data-test="progress-bar"
+                          data-current-challenge-position="1"
+                          style={{ width: "3.23%" }}
+                        ></div>
+                      </div>
+                    </div>
+                    <div className="p-2 js-user-lesson-item">
+                      <div className="d-flex align-items-center">
+                        <Link
+                          to="/exercises/ielts-listening/cam19-test-2-part-1.1370/listen-and-type"
+                          className="mr-2 text-decoration-none flex-grow-1"
+                          style={{ whiteSpace: "normal" }}
+                        >
+                          Cam19 - Test 2 - Part 1
+                        </Link>
+
+                        <button
+                          className="btn btn-sm js-remove-in-progress-lesson"
+                          data-reset-url="/api/user/reset-lesson/1370?newPosition=0"
+                          title="Remove from this list"
+                        >
+                          <i className="bi bi-x-lg fs-5"></i>
+                        </button>
+                      </div>
+                      <div className="progress" style={{ height: "5px" }}>
+                        <div
+                          className="progress-bar bg-success"
+                          role="progressbar"
+                          aria-valuenow="3.23"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                          data-test="progress-bar"
+                          data-current-challenge-position="1"
+                          style={{ width: "3.23%" }}
+                        ></div>
+                      </div>
+                    </div>
                     You don't have any incomplete exercises!
                   </div>
                   <div className="js-incomplete-lessons-container"></div>
                 </div>
               </li>
               <li className="nav-item me-2" id="app-user-notes">
-                <a href="#"
+                <Link
+                  to="#"
                   className="nav-link"
                   onClick={() => setShowNotes(true)}
-                  title="Your notes">
+                  title="Your notes"
+                >
                   <i className="bi bi-journal-text"></i>
                   <span className="d-none d-md-inline ms-1">Notes</span>
-                </a>
+                </Link>
               </li>
               <li className="nav-item me-2 dropdown-center js-dropdown-hover">
                 <Link
@@ -164,7 +227,7 @@ const Navbar = () => {
                   </Link>
                 </div>
               </li>
-              <li className="nav-item dropdown" >
+              <li className="nav-item dropdown">
                 <button
                   className="btn btn-link nav-link p-2 dropdown-toggle d-flex align-items-center border-0"
                   id="bd-theme"
@@ -208,8 +271,9 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      {showNotes && <NotePopup isOpen={showNotes} onClose={() => setShowNotes(false)} />}
-
+      {showNotes && (
+        <NotePopup isOpen={showNotes} onClose={() => setShowNotes(false)} />
+      )}
     </>
   );
 };

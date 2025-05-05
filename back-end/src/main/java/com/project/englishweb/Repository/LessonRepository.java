@@ -18,7 +18,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
     @Query("SELECT l FROM Lesson l WHERE " +
             "(:title IS NULL OR LOWER(l.title) LIKE LOWER(CONCAT('%', :title, '%'))) AND " +
-            "(:levelName IS NULL OR LOWER(l.level.name) LIKE LOWER(CONCAT('%', :levelName, '%'))) AND " +
+            "(:levelName IS NULL    OR LOWER(l.level.name) LIKE LOWER(CONCAT('%', :levelName, '%'))) AND " +
             "(:topicTitle IS NULL OR LOWER(l.topic.title) LIKE LOWER(CONCAT('%', :topicTitle, '%')))")  // Tìm kiếm theo topic.title
     Page<Lesson> findByTitleAndLevelNameAndTopicTitleWithSearch(
             @Param("title") String title,
