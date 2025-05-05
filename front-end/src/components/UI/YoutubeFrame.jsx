@@ -28,7 +28,7 @@ const YoutubeFrame = ({ url, startTime, endTime }) => {
 
     // Gọi API có gửi token
     axios
-      .post("http://localhost:8080/api/users/add-time", null, {
+      .post("http://localhost:8080/api/user/add-time", null, {
         params: {
           userId: userId,
           seconds: playedDuration,

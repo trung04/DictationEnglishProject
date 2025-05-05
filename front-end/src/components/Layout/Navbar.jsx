@@ -1,9 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NotePopup from "../../pages/Note/NotePopup";
 
-const Navbar = () => {
+const Navbar = ({ userData }) => {
+  console.log(userData);
   const [showNotes, setShowNotes] = useState(false);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload();
+    navigate("/");
+  };
 
   return (
     <>
@@ -85,148 +92,177 @@ const Navbar = () => {
           </div>
           <div>
             <ul className="navbar-nav">
-              <li
-                className="nav-item dropdown-center js-incomplete-lessons-dropdown me-2"
-                data-fetch-incomplete-lessons-url="/api/user/incomplete-lessons"
-              >
-                <Link
-                  to="#"
-                  id="incomplete-lessons-toggle"
-                  className="dropdown-toggle nav-link"
-                  title="The exercises you have started but not finished"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i className="bi bi-star-half"></i>
-                  <span className="d-none d-lg-inline">In-progress</span>
-                </Link>
-                <div
-                  className="dropdown-menu shadow mt-0"
-                  aria-labelledby="#incomplete-lessons-toggle"
-                  style={{ width: "300px" }}
-                >
-                  <div className="js-no-incomplete-lessons  px-2">
-                    <div className="p-2 js-user-lesson-item">
-                      <div className="d-flex align-items-center">
-                        <Link
-                          to="/exercises/ielts-listening/cam19-test-2-part-1.1370/listen-and-type"
-                          className="mr-2 text-decoration-none flex-grow-1"
-                          style={{ whiteSpace: "normal" }}
-                        >
-                          Cam19 - Test 2 - Part 1
-                        </Link>
+              {userData ? (
+                <>
+                  <li
+                    className="nav-item dropdown-center js-incomplete-lessons-dropdown me-2"
+                    data-fetch-incomplete-lessons-url="/api/user/incomplete-lessons"
+                  >
+                    <Link
+                      to="#"
+                      id="incomplete-lessons-toggle"
+                      className="dropdown-toggle nav-link"
+                      title="The exercises you have started but not finished"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i className="bi bi-star-half"></i>
+                      <span className="d-none d-lg-inline">In-progress</span>
+                    </Link>
+                    <div
+                      className="dropdown-menu shadow mt-0"
+                      aria-labelledby="#incomplete-lessons-toggle"
+                      style={{ width: "300px" }}
+                    >
+                      <div className="js-no-incomplete-lessons  px-2">
+                        <div className="p-2 js-user-lesson-item">
+                          <div className="d-flex align-items-center">
+                            <Link
+                              to="/exercises/ielts-listening/cam19-test-2-part-1.1370/listen-and-type"
+                              className="mr-2 text-decoration-none flex-grow-1"
+                              style={{ whiteSpace: "normal" }}
+                            >
+                              Cam19 - Test 2 - Part 1
+                            </Link>
 
-                        <button
-                          className="btn btn-sm js-remove-in-progress-lesson"
-                          data-reset-url="/api/user/reset-lesson/1370?newPosition=0"
-                          title="Remove from this list"
-                        >
-                          <i className="bi bi-x-lg fs-5"></i>
-                        </button>
-                      </div>
-                      <div className="progress" style={{ height: "5px" }}>
-                        <div
-                          className="progress-bar bg-success"
-                          role="progressbar"
-                          aria-valuenow="3.23"
-                          aria-valuemin="0"
-                          aria-valuemax="100"
-                          data-test="progress-bar"
-                          data-current-challenge-position="1"
-                          style={{ width: "3.23%" }}
-                        ></div>
-                      </div>
-                    </div>
-                    <div className="p-2 js-user-lesson-item">
-                      <div className="d-flex align-items-center">
-                        <Link
-                          to="/exercises/ielts-listening/cam19-test-2-part-1.1370/listen-and-type"
-                          className="mr-2 text-decoration-none flex-grow-1"
-                          style={{ whiteSpace: "normal" }}
-                        >
-                          Cam19 - Test 2 - Part 1
-                        </Link>
+                            <button
+                              className="btn btn-sm js-remove-in-progress-lesson"
+                              data-reset-url="/api/user/reset-lesson/1370?newPosition=0"
+                              title="Remove from this list"
+                            >
+                              <i className="bi bi-x-lg fs-5"></i>
+                            </button>
+                          </div>
+                          <div className="progress" style={{ height: "5px" }}>
+                            <div
+                              className="progress-bar bg-success"
+                              role="progressbar"
+                              aria-valuenow="3.23"
+                              aria-valuemin="0"
+                              aria-valuemax="100"
+                              data-test="progress-bar"
+                              data-current-challenge-position="1"
+                              style={{ width: "3.23%" }}
+                            ></div>
+                          </div>
+                        </div>
+                        <div className="p-2 js-user-lesson-item">
+                          <div className="d-flex align-items-center">
+                            <Link
+                              to="/exercises/ielts-listening/cam19-test-2-part-1.1370/listen-and-type"
+                              className="mr-2 text-decoration-none flex-grow-1"
+                              style={{ whiteSpace: "normal" }}
+                            >
+                              Cam19 - Test 2 - Part 1
+                            </Link>
 
-                        <button
-                          className="btn btn-sm js-remove-in-progress-lesson"
-                          data-reset-url="/api/user/reset-lesson/1370?newPosition=0"
-                          title="Remove from this list"
-                        >
-                          <i className="bi bi-x-lg fs-5"></i>
-                        </button>
+                            <button
+                              className="btn btn-sm js-remove-in-progress-lesson"
+                              data-reset-url="/api/user/reset-lesson/1370?newPosition=0"
+                              title="Remove from this list"
+                            >
+                              <i className="bi bi-x-lg fs-5"></i>
+                            </button>
+                          </div>
+                          <div className="progress" style={{ height: "5px" }}>
+                            <div
+                              className="progress-bar bg-success"
+                              role="progressbar"
+                              aria-valuenow="3.23"
+                              aria-valuemin="0"
+                              aria-valuemax="100"
+                              data-test="progress-bar"
+                              data-current-challenge-position="1"
+                              style={{ width: "3.23%" }}
+                            ></div>
+                          </div>
+                        </div>
+                        You don't have any incomplete exercises!
                       </div>
-                      <div className="progress" style={{ height: "5px" }}>
-                        <div
-                          className="progress-bar bg-success"
-                          role="progressbar"
-                          aria-valuenow="3.23"
-                          aria-valuemin="0"
-                          aria-valuemax="100"
-                          data-test="progress-bar"
-                          data-current-challenge-position="1"
-                          style={{ width: "3.23%" }}
-                        ></div>
-                      </div>
+                      <div className="js-incomplete-lessons-container"></div>
                     </div>
-                    You don't have any incomplete exercises!
-                  </div>
-                  <div className="js-incomplete-lessons-container"></div>
-                </div>
-              </li>
-              <li className="nav-item me-2" id="app-user-notes">
-                <Link
-                  to="#"
-                  className="nav-link"
-                  onClick={() => setShowNotes(true)}
-                  title="Your notes"
-                >
-                  <i className="bi bi-journal-text"></i>
-                  <span className="d-none d-md-inline ms-1">Notes</span>
-                </Link>
-              </li>
-              <li className="nav-item me-2 dropdown-center js-dropdown-hover">
-                <Link
-                  to="#"
-                  id="account-dropdown-toggle"
-                  className="dropdown-toggle nav-link"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i className="bi bi-person-circle"></i>
-                  <span className="d-none d-md-inline"> jimmy </span>
-                </Link>
-                <div
-                  className="dropdown-menu dropdown-menu-right dropdown-menu-md-start shadow mt-0"
-                  aria-labelledby="#account-dropdown-toggle"
-                >
-                  <Link className="dropdown-item" to="/profile/337536">
-                    Public profile
-                  </Link>
-                  <Link className="dropdown-item" to="/user/profile">
-                    Account information
-                  </Link>
-                  <Link className="dropdown-item" to="/user/notifications">
-                    Notifications
-                    <span className="badge bg-danger rounded-pill"></span>
-                  </Link>
-                  <Link className="dropdown-item" to="/user/comments">
-                    Comments
-                  </Link>
-                  <Link className="dropdown-item" to="/user/favorite-lessons">
-                    Favorite lessons
-                  </Link>
-                  <Link className="dropdown-item" to="/user/change-password">
-                    Change password
-                  </Link>
-                  <Link className="dropdown-item" to="/user/edit-email">
-                    Change Email
-                  </Link>
-                  <div className="dropdown-divider"></div>
-                  <Link className="dropdown-item" to="/logout">
-                    Logout
-                  </Link>
-                </div>
-              </li>
+                  </li>
+                  <li className="nav-item me-2" id="app-user-notes">
+                    <Link
+                      to="#"
+                      className="nav-link"
+                      onClick={() => setShowNotes(true)}
+                      title="Your notes"
+                    >
+                      <i className="bi bi-journal-text"></i>
+                      <span className="d-none d-md-inline ms-1">Notes</span>
+                    </Link>
+                  </li>
+                  <li className="nav-item me-2 dropdown-center js-dropdown-hover">
+                    <Link
+                      to="#"
+                      id="account-dropdown-toggle"
+                      className="dropdown-toggle nav-link"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i className="bi bi-person-circle"></i>
+                      <span className="d-none d-md-inline">
+                        {userData.username}
+                      </span>
+                    </Link>
+                    <div
+                      className="dropdown-menu dropdown-menu-right dropdown-menu-md-start shadow mt-0"
+                      aria-labelledby="#account-dropdown-toggle"
+                    >
+                      <Link className="dropdown-item" to="/user/profile">
+                        Account information
+                      </Link>
+                      {/* <Link className="dropdown-item" to="/user/notifications">
+                      Notifications
+                      <span className="badge bg-danger rounded-pill"></span>
+                    </Link> */}
+                      <Link className="dropdown-item" to="/user/comments">
+                        Comments
+                      </Link>
+
+                      <Link
+                        className="dropdown-item"
+                        to="/user/change-password"
+                      >
+                        Change password
+                      </Link>
+                      <Link className="dropdown-item" to="/user/edit-email">
+                        Change Email
+                      </Link>
+                      <div className="dropdown-divider"></div>
+                      <button
+                        className="dropdown-item"
+                        onClick={() => {
+                          handleLogout();
+                        }}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link
+                      to="/login"
+                      className="  p-2  d-flex align-items-center border-0"
+                    >
+                      Login
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/register"
+                      className="  p-2  d-flex align-items-center border-0"
+                    >
+                      Register
+                    </Link>
+                  </li>
+                </>
+              )}
+
               <li className="nav-item dropdown">
                 <button
                   className="btn btn-link nav-link p-2 dropdown-toggle d-flex align-items-center border-0"

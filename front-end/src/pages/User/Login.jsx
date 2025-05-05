@@ -1,8 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
 const Login = () => {
+  //điều hướng
+  const navigate = useNavigate();
+  //form đăng nhập
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -18,14 +21,26 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:8080/login", {
-        email: form.username,
-        password: form.password,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/auth/login",
+        {
+          username: form.username,
+          password: form.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // Nếu cần gửi token thì thêm dòng dưới:
+            // "Authorization": `Bearer ${yourAccessToken}`
+          },
+        }
+      );
 
       const token = response.data.token;
       localStorage.setItem("token", token);
-      alert("Đăng nhập thành công!");
+      localStorage.setItem("keepLoggedIn", JSON.stringify(true));
+      window.location.reload();
+      navigate("/");
       // navigate hoặc cập nhật UI tại đây
     } catch (err) {
       console.log(err);
