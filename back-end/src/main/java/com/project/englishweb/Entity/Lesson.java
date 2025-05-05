@@ -38,5 +38,9 @@ public class Lesson {
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Progress> progresses;
 
-
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String transcript;
+    @Column(nullable = false)
+    private int questionCount;
 }
