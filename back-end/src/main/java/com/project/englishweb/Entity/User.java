@@ -48,4 +48,13 @@ public class User {
             createdAt = LocalDateTime.now();
         }
     }
+
+    public void addSeconds(int second) {
+        this.activeHours += second;
+    }
+
+
+    public int getTotalSeconds() {
+        return this.activeHours;
+    }
 }

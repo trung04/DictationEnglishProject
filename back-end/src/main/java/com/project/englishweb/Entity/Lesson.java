@@ -27,8 +27,8 @@ public class Lesson {
 
     private String URL;
 
-    @Column(name = "transcript")
-    private String transcript;
+//    @Column(name = "transcript")
+//    private String transcript;
 
     @ManyToOne
     @JoinColumn(name = "topic_id", nullable = false) // Khóa ngoại

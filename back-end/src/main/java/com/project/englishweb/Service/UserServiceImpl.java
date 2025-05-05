@@ -74,16 +74,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long addTime(Long id, long second) {
+    public int addTime(Long id, int second) {
         User user = userRepository.findById(id).get();
         user.addSeconds(second);
         userRepository.save(user);
-
         return user.getTotalSeconds();
     }
 
+
     @Override
-    public long getTime(Long id) {
+    public long getTime(Long id)
+    {
         return 0;
     }
 
