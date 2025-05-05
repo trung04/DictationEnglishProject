@@ -33,22 +33,32 @@
                             <label for="createTitle">Title</label>
                             <input type="text" class="form-control" id="createTitle" th:field="*{title}" required/>
                         </div>
-<!--                            <div class="form-group">-->
-<!--                                <label for="createLevel">Level</label>-->
-<!--                                <input type="text" class="form-control" id="createLevel" th:field="*{levelName}" required/>-->
-<!--                            </div>-->
+
                         <div class="form-group">
                             <label for="createURL">URL</label>
                             <input type="text" class="form-control" id="createURL" th:field="*{URL}" required/>
                         </div>
+
                         <div class="form-group">
                             <label for="createTopicId">Topic ID</label>
                             <input type="number" class="form-control" id="createTopicId" th:field="*{topicId}" required/>
                         </div>
+
                         <div class="form-group">
                             <label for="createLevelId">Level ID</label>
                             <input type="number" class="form-control" id="createLevelId" th:field="*{levelId}" required/>
                         </div>
+
+                        <div class="form-group">
+                            <label for="createTranscript">Transcript (JSON format)</label>
+                            <textarea class="form-control" id="createTranscript" th:field="*{transcript}" rows="5" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="createQuestionCount">Number of Questions</label>
+                            <input type="number" class="form-control" id="createQuestionCount" th:field="*{questionCount}" required/>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Save Lesson</button>
                         <button type="button" class="btn btn-default"
                                 onclick="document.getElementById('createLessonFormContainer').style.display='none'; document.getElementById('showCreateFormBtn').style.display='inline-block';">
@@ -56,6 +66,7 @@
                         </button>
                     </form>
                 </div>
+
                 <!-- EDIT FORM -->
                 <div th:if="${editLessonId != null}">
                     <h3>Edit Lesson</h3>
@@ -64,6 +75,7 @@
                             <label for="editTitle">Title</label>
                             <input type="text" class="form-control" id="editTitle" th:field="*{title}" required/>
                         </div>
+
                         <div class="form-group">
                             <label for="editLevel">Level</label>
                             <select class="form-control" id="editLevel" th:field="*{levelId}" required>
@@ -73,14 +85,28 @@
                                         th:selected="${level.levelId == editLessonDTO.levelId}">Select Level</option>
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label for="editURL">URL</label>
                             <input type="text" class="form-control" id="editURL" th:field="*{URL}" required/>
                         </div>
+
                         <div class="form-group">
                             <label for="editTopicTitle">Topic Title</label>
                             <input type="text" class="form-control" id="editTopicTitle" th:field="*{topicId}" required/>
                         </div>
+
+                        <!-- Add Transcript Field -->
+                        <div class="form-group">
+                            <label for="editTranscript">Transcript (JSON format)</label>
+                            <textarea class="form-control" id="editTranscript" th:field="*{transcript}" rows="5" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editQuestionCount">Number of Questions</label>
+                            <input type="number" class="form-control" id="editQuestionCount" th:field="*{questionCount}" required/>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Update Lesson</button>
                         <a th:href="@{/lessons}" class="btn btn-default">Cancel</a>
                     </form>
@@ -113,6 +139,7 @@
                             <th>URL</th>
                             <th>Topic Title</th>
                             <th>Topic ID</th>
+                            <th>Number of Questions</th>  
                             <th>Actions</th>
                         </tr>
                         </thead>
@@ -123,6 +150,7 @@
                             <td><a th:href="${lesson.URL}" th:text="${lesson.URL}" target="_blank"></a></td>
                             <td th:text="${lesson.topic.title}"></td> <!-- Hiển thị tên Topic -->
                             <td th:text="${lesson.topic.topicId}"></td>
+                            <td th:text="${lesson.questionCount}"></td>  <!-- Display question count -->
                             <td>
                                 <a th:href="@{/lessons(editId=${lesson.lessonId})}" class="btn btn-warning btn-sm">Edit</a>
                                 <a th:href="@{/lessons/delete/{id}(id=${lesson.lessonId})}" class="btn btn-danger btn-sm"

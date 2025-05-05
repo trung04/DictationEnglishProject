@@ -10,6 +10,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 @Configuration
 public class SecurityConfig {
 
+    private final JwtUtil jwtUtil;
+
+    public SecurityConfig(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

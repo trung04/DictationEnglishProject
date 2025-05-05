@@ -64,9 +64,11 @@ public class LessonController {
                 LessonDTO editDTO = new LessonDTO();
                 editDTO.setTitle(lessonToEdit.getTitle());
                 editDTO.setLevelName(lessonToEdit.getLevel().getName());
-                editDTO.setLevelId(lessonToEdit.getLevel().getLevelId());  // Cập nhật ID Level từ đối tượng Level
+                editDTO.setLevelId(lessonToEdit.getLevel().getLevelId());  
                 editDTO.setURL(lessonToEdit.getURL());
                 editDTO.setTopicId(lessonToEdit.getTopic().getTopicId());
+                editDTO.setTranscript(lessonToEdit.getTranscript());  
+                editDTO.setQuestionCount(lessonToEdit.getQuestionCount());
                 model.addAttribute("editLessonDTO", editDTO);
             }
         }
