@@ -30,42 +30,52 @@ public class LessonServiceImpl implements LessonService {
         // Tìm Level từ levelId
         Level level = levelRepository.findById(lessonDTO.getLevelId())
                 .orElseThrow(() -> new NoSuchElementException("Level not found"));
+
         String[] lines = lessonDTO.getTranscript().split("\n");
         StringBuilder transcriptString = new StringBuilder();
-        String start = "0:00";  
+        String start = "0:00";  // Bắt đầu từ 0:00 (hoặc thời gian bắt đầu của transcript đầu tiên)
         int id = 1;
+        String end = "";
+        int QuestionCount = 0;
         // Duyệt qua từng dòng transcript
         for (String line : lines) {
-            String[] parts = line.split(" ", 2);  
+            String[] parts = line.trim().split(" ", 2);  // Tách phần đầu là thời gian, phần còn lại là văn bản
             if (parts.length < 2) {
-                continue;  
+                if(parts[0].charAt(parts[0].length()-3)==':'){
+                    QuestionCount++;
+                    end = parts[0].trim();
+                    continue;
+                }
             }
 
-            String end = parts[0];  
-            String text = parts[1];  
+            String text = line;
+
             transcriptString.append("Id: ").append(String.valueOf(id))
                     .append(" Start: ").append(start)
                     .append(" End: ").append(end)
                     .append(" Text: ").append(text)
                     .append("\n");
 
+            // Cập nhật thời gian bắt đầu cho dòng tiếp theo
             start = end;
             id++;
         }
 
+        // Chuyển transcript thành String
         String transcript = transcriptString.toString();
 
-        // Tạo bài học mới
+        // Tạo bài học mới và lưu vào cơ sở dữ liệu
         Lesson lesson = new Lesson();
         lesson.setTitle(lessonDTO.getTitle());
         lesson.setLevel(level);  // Gán level từ DTO
         lesson.setURL(lessonDTO.getURL());
         lesson.setTopic(topic);
         lesson.setLevelName(level.getName());
-        lesson.setTranscript(transcript); 
-        lesson.setQuestionCount(lessonDTO.getQuestionCount());
+        lesson.setTranscript(transcript);  // Lưu transcript dưới dạng String
+        lesson.setQuestionCount(QuestionCount);
 
-        return lessonRepository.save(lesson); 
+        // Lưu bài học vào cơ sở dữ liệu
+        return lessonRepository.save(lesson);
     }
 
     @Override
@@ -94,24 +104,24 @@ public class LessonServiceImpl implements LessonService {
         Topic topic = topicRepository.findById(lessonDTO.getTopicId())
                 .orElseThrow(() -> new NoSuchElementException("Topic không tồn tại"));
 
-        lesson.setTitle(lessonDTO.getTitle());
-        lesson.setLevel(level);
-        lesson.setLevelName(level.getName());
-        lesson.setURL(lessonDTO.getURL());
-        lesson.setTopic(topic);
         String[] lines = lessonDTO.getTranscript().split("\n");
         StringBuilder transcriptString = new StringBuilder();
-        String start = "0:00";  
+        String start = "0:00";
         int ID = 1;
+        String end = "";
+        int QuestionCount = 0;
         // Duyệt qua từng dòng transcript
         for (String line : lines) {
-            String[] parts = line.split(" ", 2);  
+            String[] parts = line.trim().split(" ", 2);
             if (parts.length < 2) {
-                continue; 
+                if(parts[0].charAt(parts[0].length()-3)==':'){
+                    QuestionCount++;
+                    end = parts[0].trim();
+                    continue;
+                }
             }
 
-            String end = parts[0];  
-            String text = parts[1];
+            String text = line;
             transcriptString.append("Id: ").append(String.valueOf(ID))
                     .append(" Start: ").append(start)
                     .append(" End: ").append(end)
@@ -121,8 +131,13 @@ public class LessonServiceImpl implements LessonService {
             ID++;
         }
         String transcript = transcriptString.toString();
+        lesson.setTitle(lessonDTO.getTitle());
+        lesson.setLevel(level);
+        lesson.setLevelName(level.getName());
+        lesson.setURL(lessonDTO.getURL());
+        lesson.setTopic(topic);
         lesson.setTranscript(transcript);
-        lesson.setQuestionCount(lessonDTO.getQuestionCount());
+        lesson.setQuestionCount(QuestionCount);
         return lessonRepository.save(lesson);
     }
 
