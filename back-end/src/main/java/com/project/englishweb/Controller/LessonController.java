@@ -23,6 +23,7 @@ public class LessonController {
 
     private final LessonService lessonService;
     private final LevelService levelService;
+    private final TopicService topicService;
 
     @GetMapping
     public String lessonManagement(@RequestParam(required = false) String title,
