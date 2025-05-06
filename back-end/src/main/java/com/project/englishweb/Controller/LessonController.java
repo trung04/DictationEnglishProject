@@ -31,6 +31,7 @@ public class LessonController {
                                    @RequestParam(defaultValue = "0") int page,
                                    @RequestParam(required = false) Long editId,
                                    @RequestParam(required = false) Long levelId,
+                                   @RequestParam(required = false) Long topicId,
                                    Model model) {
         Pageable pageable = PageRequest.of(page, 10);
         Page<Lesson> lessonsPage;
@@ -40,7 +41,11 @@ public class LessonController {
         } else {
             model.addAttribute("levels", levelService.getAllLevels());  // Nếu không có levelId, lấy tất cả Level
         }
-
+        if (topicId != null) {
+            model.addAttribute("topics", topicService.getTopicById(topicId));
+        } else {
+            model.addAttribute("topics", topicService.getAllTopics());  // Nếu không có levelId, lấy tất cả Level
+        }
         if (title != null || levelName != null || topicTitle != null) {
             lessonsPage = lessonService.searchLessons(title, levelName, topicTitle, pageable);  // Gọi search theo topicTitle
             model.addAttribute("searchTitle", title);
