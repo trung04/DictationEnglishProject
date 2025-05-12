@@ -3,6 +3,8 @@ import YouTube from "react-youtube";
 import axios from "axios";
 
 const YoutubeFrame = ({ url, startTime, endTime }) => {
+  const [userData, setUserData] = useState();
+  const [error, setError] = useState();
   const playerRef = useRef(null);
   const videoId = url; // ID video
   const opts = {
@@ -16,13 +18,36 @@ const YoutubeFrame = ({ url, startTime, endTime }) => {
   const onReady = (event) => {
     playerRef.current = event.target;
   };
+  useEffect(() => {
+    // Lấy token từ localStorage
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      // Nếu có token, gọi API để lấy thông tin người dùng
+      axios
+        .get("http://localhost:8080/api/user/account-info", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Thêm token vào header
+          },
+        })
+        .then((response) => {
+          setUserData(response.data); // Lưu thông tin người dùng vào state
+        })
+        .catch((err) => {
+          console.error(err);
+          setError("Không thể lấy thông tin người dùng.");
+        });
+    } else {
+      setError("Bạn chưa đăng nhập.");
+    }
+  }, []);
   //hàm xử lý phát video
   const handlePlayVideo = () => {
     if (!playerRef.current) return;
 
     const start = parseInt(startTime, 10);
     const end = parseInt(endTime, 10);
-    const userId = 1;
+    const userId = userData.userId;
     const playedDuration = end - start;
     // const token = localStorage.getItem("token"); // hoặc từ React Context
 
@@ -30,7 +55,7 @@ const YoutubeFrame = ({ url, startTime, endTime }) => {
     axios
       .post("http://localhost:8080/api/user/add-time", null, {
         params: {
-          userId: userId,
+          userId: userData?.userId,
           seconds: playedDuration,
         },
         // headers: {
@@ -41,6 +66,7 @@ const YoutubeFrame = ({ url, startTime, endTime }) => {
         console.log("Tổng thời gian đã cộng:", response.data);
       })
       .catch((error) => {
+        console.log(error);
         console.log("Lỗi khi cộng thời gian:");
       });
 
@@ -68,7 +94,7 @@ const YoutubeFrame = ({ url, startTime, endTime }) => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [startTime, endTime]);
+  }, [startTime, endTime, userData]);
 
   return (
     <>

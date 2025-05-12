@@ -24,7 +24,7 @@ const Login = () => {
       const response = await axios.post(
         "http://localhost:8080/api/auth/login",
         {
-          username: form.username,
+          email: form.username,
           password: form.password,
         },
         {

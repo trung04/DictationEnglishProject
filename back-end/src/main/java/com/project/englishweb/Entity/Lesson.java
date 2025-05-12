@@ -1,6 +1,7 @@
 package com.project.englishweb.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,6 +40,7 @@ public class Lesson {
     private List<Question> questions;
 
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Progress> progresses;
 
     @Lob
@@ -46,4 +48,8 @@ public class Lesson {
     private String transcript;
     @Column(nullable = false)
     private int questionCount;
+
+    public Long getLessonId() {
+        return lessonId;
+    }
 }

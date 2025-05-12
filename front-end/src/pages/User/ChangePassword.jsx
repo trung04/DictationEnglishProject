@@ -13,7 +13,7 @@ const ChangePassword = ({ userData }) => {
 
       const response = await axios.post(
         "http://localhost:8080/api/user/update-password", // đổi thành URL thực tế nếu cần
-        { newPassword: newPassword, oldPassword: "1234567" },
+        { newPassword: newPassword },
         {
           headers: {
             Authorization: `Bearer ${token}`,

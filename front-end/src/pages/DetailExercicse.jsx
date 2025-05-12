@@ -36,7 +36,7 @@ const compareText = (inputText, correctText) => {
   };
 };
 
-const DetailExercise = () => {
+const DetailExercise = ({ userData }) => {
   const { id } = useParams();
   const [sizeVideo, setSizeVieo] = useState();
   //chia grid bootstrap có 12 cột
@@ -108,24 +108,6 @@ const DetailExercise = () => {
     setShowInput(true);
   };
 
-  //Hàm xử lý đổi challenge
-  // const handleChangeChallenge = (status) => {
-  //   if (status == 0 && challengeId > 1) {
-  //     setChallengeId(challengeId - 1);
-  //   }
-  //   if (status == 1 && challengeId < challenges.length) {
-  //     setChallengeId(challengeId + 1);
-  //   }
-  //   const challenge = challenges.find((ch) => ch.id == challengeId);
-  //   setEndTime(convertTimeToSeconds(challenge.end));
-  //   setStartTime(convertTimeToSeconds(challenge.start));
-  //   setResult(null);
-  //   setErrors([]);
-  //   setInputText("");
-  //   setInputLength(0);
-  //   setCorrectLength(0);
-  // };
-
   //hàm xử l
   useEffect(() => {
     const challenge = challenges.find((ch) => ch.id === challengeId);
@@ -151,6 +133,34 @@ const DetailExercise = () => {
       newChallengeId = challengeId + 1;
     }
     setChallengeId(newChallengeId);
+
+    if (userData?.userId) {
+      console.log("thành công blala");
+
+      const addProgress = async () => {
+        try {
+          const res = await axios.post(
+            "http://localhost:8080/api/progress/add",
+            null,
+            {
+              params: {
+                lessonStatus: 0,
+                attempts: challengeId,
+                userId: userData.userId,
+                lessonId: id,
+              },
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          console.log("thành công");
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      addProgress();
+    }
   };
 
   // Hàm hiển thị văn bản với các từ sai được gạch dưới và từ chưa nhập hiển thị là * (nếu bật hideUnreached)
@@ -178,7 +188,7 @@ const DetailExercise = () => {
       );
     });
   };
-
+  //api kéo dữ liệu lesson
   useEffect(() => {
     axios
       .get(`http://localhost:8080/api/lessons/${id}`)
@@ -189,8 +199,8 @@ const DetailExercise = () => {
       .catch((error) => {
         console.error("Lỗi khi lấy danh sách topics:", error);
       });
-  }, []);
-
+  }, [id]);
+  //api xử lý enter
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Enter") {
@@ -210,7 +220,31 @@ const DetailExercise = () => {
     };
   }, [result]);
 
-  //hàm xử lý Video
+  //api kéo progress
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (userData?.userId && token) {
+      const fetchData = async () => {
+        try {
+          const res = await axios.get(
+            `http://localhost:8080/api/progress/user/${userData.userId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          setChallengeId(res.data.find((item) => item.lessonId == id).attempts);
+        } catch (error) {
+          console.error("Lỗi khi fetch progress:", error);
+        }
+      };
+
+      fetchData();
+    }
+  }, [userData?.userId, id]);
 
   return (
     <>
@@ -315,6 +349,7 @@ const DetailExercise = () => {
                 </div>
                 <div className={` ${isHidden ? "d-none" : ""}`}>
                   <YoutubeFrame
+                    userData={userData}
                     startTime={startTime}
                     endTime={endTime}
                     url={lesson.url}

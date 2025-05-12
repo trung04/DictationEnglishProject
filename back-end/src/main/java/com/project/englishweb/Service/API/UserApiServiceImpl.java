@@ -50,6 +50,7 @@ public class UserApiServiceImpl implements UserApiService {
         dto.setUserId(user.getUserId());
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
+        dto.setActiveHours(user.getActiveHours());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         dto.setCreatedAt(user.getCreatedAt().format(formatter));
         return dto;

@@ -53,6 +53,9 @@ public class User {
         this.activeHours += second;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
 
     public int getTotalSeconds() {
         return this.activeHours;

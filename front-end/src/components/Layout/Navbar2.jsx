@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
 const Navbar2 = (props) => {
-  console.log(props);
-
   return (
     <>
       <nav className="container-lg mb-3">

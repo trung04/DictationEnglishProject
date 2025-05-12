@@ -1,16 +1,41 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NotePopup from "../../pages/Note/NotePopup";
+import axios from "axios";
 
 const Navbar = ({ userData }) => {
-  console.log(userData);
+  const [progress, setProgress] = useState([]);
   const [showNotes, setShowNotes] = useState(false);
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.clear();
-    window.location.reload();
     navigate("/");
+    window.location.reload();
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (userData?.userId && token) {
+      const fetchData = async () => {
+        try {
+          const res = await axios.get(
+            `http://localhost:8080/api/progress/user/${userData.userId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setProgress(res.data);
+        } catch (error) {
+          console.error("Lỗi khi fetch progress:", error);
+        }
+      };
+
+      fetchData();
+    }
+  }, [userData?.userId]);
 
   return (
     <>
@@ -87,7 +112,13 @@ const Navbar = ({ userData }) => {
               data-bs-placement="bottom"
             >
               <i className="bi bi-clock-history me-1"></i>
-              <span id="time-spent"> 0 minutes </span>
+              <span id="time-spent">
+                {" "}
+                {userData?.activeHours
+                  ? Math.round(userData.activeHours / 60)
+                  : "0"}{" "}
+                minutes{" "}
+              </span>
             </span>
           </div>
           <div>
@@ -115,69 +146,52 @@ const Navbar = ({ userData }) => {
                       style={{ width: "300px" }}
                     >
                       <div className="js-no-incomplete-lessons  px-2">
-                        <div className="p-2 js-user-lesson-item">
-                          <div className="d-flex align-items-center">
-                            <Link
-                              to="/exercises/ielts-listening/cam19-test-2-part-1.1370/listen-and-type"
-                              className="mr-2 text-decoration-none flex-grow-1"
-                              style={{ whiteSpace: "normal" }}
-                            >
-                              Cam19 - Test 2 - Part 1
-                            </Link>
+                        {progress && Object.keys(progress).length > 0 ? (
+                          Object.entries(progress).map(([key, prog]) => {
+                            return (
+                              <div className="p-2 js-user-lesson-item">
+                                <div className="d-flex align-items-center">
+                                  <a
+                                    href={`/exercises/lesson/${prog.lessonId}`}
+                                    className="mr-2 text-decoration-none flex-grow-1"
+                                    style={{ whiteSpace: "normal" }}
+                                  >
+                                    {prog.lesson.title}
+                                  </a>
 
-                            <button
-                              className="btn btn-sm js-remove-in-progress-lesson"
-                              data-reset-url="/api/user/reset-lesson/1370?newPosition=0"
-                              title="Remove from this list"
-                            >
-                              <i className="bi bi-x-lg fs-5"></i>
-                            </button>
-                          </div>
-                          <div className="progress" style={{ height: "5px" }}>
-                            <div
-                              className="progress-bar bg-success"
-                              role="progressbar"
-                              aria-valuenow="3.23"
-                              aria-valuemin="0"
-                              aria-valuemax="100"
-                              data-test="progress-bar"
-                              data-current-challenge-position="1"
-                              style={{ width: "3.23%" }}
-                            ></div>
-                          </div>
-                        </div>
-                        <div className="p-2 js-user-lesson-item">
-                          <div className="d-flex align-items-center">
-                            <Link
-                              to="/exercises/ielts-listening/cam19-test-2-part-1.1370/listen-and-type"
-                              className="mr-2 text-decoration-none flex-grow-1"
-                              style={{ whiteSpace: "normal" }}
-                            >
-                              Cam19 - Test 2 - Part 1
-                            </Link>
-
-                            <button
-                              className="btn btn-sm js-remove-in-progress-lesson"
-                              data-reset-url="/api/user/reset-lesson/1370?newPosition=0"
-                              title="Remove from this list"
-                            >
-                              <i className="bi bi-x-lg fs-5"></i>
-                            </button>
-                          </div>
-                          <div className="progress" style={{ height: "5px" }}>
-                            <div
-                              className="progress-bar bg-success"
-                              role="progressbar"
-                              aria-valuenow="3.23"
-                              aria-valuemin="0"
-                              aria-valuemax="100"
-                              data-test="progress-bar"
-                              data-current-challenge-position="1"
-                              style={{ width: "3.23%" }}
-                            ></div>
-                          </div>
-                        </div>
-                        You don't have any incomplete exercises!
+                                  <button
+                                    className="btn btn-sm js-remove-in-progress-lesson"
+                                    data-reset-url="/api/user/reset-lesson/1370?newPosition=0"
+                                    title="Remove from this list"
+                                  >
+                                    <i className="bi bi-x-lg fs-5"></i>
+                                  </button>
+                                </div>
+                                <div
+                                  className="progress"
+                                  style={{ height: "5px" }}
+                                >
+                                  <div
+                                    className="progress-bar bg-success"
+                                    role="progressbar"
+                                    data-test="progress-bar"
+                                    style={{
+                                      width: `${
+                                        (prog.attempts /
+                                          prog.lesson.questionCount) *
+                                        100
+                                      }%`,
+                                    }}
+                                  ></div>
+                                </div>
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <>
+                            <div>You don't have any incomplete exercises!</div>
+                          </>
+                        )}
                       </div>
                       <div className="js-incomplete-lessons-container"></div>
                     </div>
@@ -227,9 +241,7 @@ const Navbar = ({ userData }) => {
                       >
                         Change password
                       </Link>
-                      <Link className="dropdown-item" to="/user/edit-email">
-                        Change Email
-                      </Link>
+
                       <div className="dropdown-divider"></div>
                       <button
                         className="dropdown-item"
@@ -262,47 +274,6 @@ const Navbar = ({ userData }) => {
                   </li>
                 </>
               )}
-
-              <li className="nav-item dropdown">
-                <button
-                  className="btn btn-link nav-link p-2 dropdown-toggle d-flex align-items-center border-0"
-                  id="bd-theme"
-                  type="button"
-                  title="Switch theme"
-                  aria-expanded="false"
-                  data-bs-toggle="dropdown"
-                  data-bs-display="static"
-                  aria-label="Toggle theme (dark)"
-                >
-                  <i className="bi bi-sun-fill"></i>
-                  <span id="bd-theme-text"></span>
-                </button>
-                <ul
-                  className="dropdown-menu dropdown-menu-end"
-                  aria-labelledby="bd-theme-text"
-                >
-                  <li>
-                    <button
-                      type="button"
-                      className="dropdown-item d-flex align-items-center"
-                      data-bs-theme-value="light"
-                      aria-pressed="false"
-                    >
-                      <i className="bi bi-sun-fill me-2"></i> Light
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      className="dropdown-item d-flex align-items-center active"
-                      data-bs-theme-value="dark"
-                      aria-pressed="true"
-                    >
-                      <i className="bi bi-moon-stars-fill me-2"></i> Dark
-                    </button>
-                  </li>
-                </ul>
-              </li>
             </ul>
           </div>
         </div>

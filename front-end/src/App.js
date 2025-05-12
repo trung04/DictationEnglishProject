@@ -22,11 +22,11 @@ function App() {
   const token = localStorage.getItem("token");
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
-  console.log(localStorage);
   useEffect(() => {
     // Lấy token từ localStorage
     const token = localStorage.getItem("token");
-
+    console.log(token);
+    // localStorage.clear();
     if (token) {
       // Nếu có token, gọi API để lấy thông tin người dùng
       axios
@@ -56,7 +56,10 @@ function App() {
             <Route path="exercises" element={<Exercises />}>
               <Route index element={<ListTopic />} />
               <Route path=":id" element={<ListExercise />}></Route>
-              <Route path="lesson/:id" element={<DetailExercise />} />
+              <Route
+                path="lesson/:id"
+                element={<DetailExercise userData={userData} />}
+              />
             </Route>
             <Route path="top-users" element={<TopUsers />} />
             <Route path="contact" element={<Contact />} />
@@ -71,11 +74,23 @@ function App() {
             />
             <Route
               path="user/profile"
-              element={<UserProfile userData={userData} />}
+              element={
+                isLoggedIn ? (
+                  <UserProfile userData={userData} />
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
             />
             <Route
               path="user/change-password"
-              element={<ChangePassword userData={userData} />}
+              element={
+                isLoggedIn ? (
+                  <ChangePassword userData={userData} />
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
             />
           </Route>
         </Routes>
