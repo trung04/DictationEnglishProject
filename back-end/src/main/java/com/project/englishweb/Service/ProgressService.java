@@ -48,6 +48,14 @@ public class ProgressService {
         return progressRepository.save(progress);
     }
 
+    public void delete(Long progressId) {
+        if(!progressRepository.existsById(progressId)) {
+            throw new RuntimeException("Progress not found");
+        }
+        progressRepository.deleteById(progressId);
+
+
+    }
     public List<ProgressDTO> getProgressesByUserId(Long userId) {
         return progressRepository.findByUserId(userId);
     }

@@ -428,9 +428,9 @@ const DetailExercise = ({ userData }) => {
                         </div>
                       </div>
                       <div>
-                        <button class="btn text-muted">
+                        {/* <button class="btn text-muted">
                           <i class="bi bi-gear-fill"></i>
-                        </button>
+                        </button> */}
                       </div>
                     </div>
 

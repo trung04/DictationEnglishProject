@@ -47,28 +47,30 @@ const YoutubeFrame = ({ url, startTime, endTime }) => {
 
     const start = parseInt(startTime, 10);
     const end = parseInt(endTime, 10);
-    const userId = userData.userId;
+    const userId = userData?.userId;
     const playedDuration = end - start;
     // const token = localStorage.getItem("token"); // hoặc từ React Context
 
     // Gọi API có gửi token
-    axios
-      .post("http://localhost:8080/api/user/add-time", null, {
-        params: {
-          userId: userData?.userId,
-          seconds: playedDuration,
-        },
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // },
-      })
-      .then((response) => {
-        console.log("Tổng thời gian đã cộng:", response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log("Lỗi khi cộng thời gian:");
-      });
+    if (userId) {
+      axios
+        .post("http://localhost:8080/api/user/add-time", null, {
+          params: {
+            userId: userData?.userId,
+            seconds: playedDuration,
+          },
+          // headers: {
+          //   Authorization: `Bearer ${token}`,
+          // },
+        })
+        .then((response) => {
+          console.log("Tổng thời gian đã cộng:", response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log("Lỗi khi cộng thời gian:");
+        });
+    }
 
     playerRef.current.seekTo(start, true);
     playerRef.current.playVideo();

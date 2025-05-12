@@ -12,8 +12,7 @@ const Navbar = ({ userData }) => {
     navigate("/");
     window.location.reload();
   };
-
-  useEffect(() => {
+  const fetchProgress = () => {
     const token = localStorage.getItem("token");
 
     if (userData?.userId && token) {
@@ -28,6 +27,7 @@ const Navbar = ({ userData }) => {
             }
           );
           setProgress(res.data);
+          console.log(res.data);
         } catch (error) {
           console.error("Lỗi khi fetch progress:", error);
         }
@@ -35,7 +35,27 @@ const Navbar = ({ userData }) => {
 
       fetchData();
     }
+  };
+
+  useEffect(() => {
+    fetchProgress();
   }, [userData?.userId]);
+  const handleDeleteProgress = async (id) => {
+    const confirmDelete = window.confirm(
+      "Bạn có chắc chắn muốn xóa không?" + id
+    );
+    if (confirmDelete) {
+      try {
+        const res = await axios.delete(
+          `http://localhost:8080/api/progress/delete/${id}`
+        );
+        alert("xóa thành công");
+        await fetchProgress();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <>
@@ -161,8 +181,9 @@ const Navbar = ({ userData }) => {
 
                                   <button
                                     className="btn btn-sm js-remove-in-progress-lesson"
-                                    data-reset-url="/api/user/reset-lesson/1370?newPosition=0"
-                                    title="Remove from this list"
+                                    onClick={() => {
+                                      handleDeleteProgress(prog.progressId);
+                                    }}
                                   >
                                     <i className="bi bi-x-lg fs-5"></i>
                                   </button>

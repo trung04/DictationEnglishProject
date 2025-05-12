@@ -15,7 +15,7 @@ import java.util.Optional;
     public interface ProgressRepository extends JpaRepository<Progress, Long> {
         @Query("SELECT p FROM Progress p WHERE p.user.userId = :userId AND p.lesson.lessonId = :lessonId")
         Optional<Progress> findByUserIdAndLessonId(@Param("userId") Long userId, @Param("lessonId") Long lessonId);
-        @Query("SELECT new com.project.englishweb.DTO.ProgressDTO(p.lessonStatus, p.attempts, p.user.userId, p.lesson.lessonId,p.lesson) " +
+        @Query("SELECT new com.project.englishweb.DTO.ProgressDTO(p.progressId,p.lessonStatus, p.attempts, p.user.userId, p.lesson.lessonId,p.lesson) " +
                 "FROM Progress p WHERE p.user.userId = :userId AND p.lessonStatus = 0")
         List<ProgressDTO> findByUserId(@Param("userId") Long userId);
     }

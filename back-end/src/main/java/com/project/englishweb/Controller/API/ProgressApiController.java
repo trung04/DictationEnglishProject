@@ -34,11 +34,15 @@ public class ProgressApiController
         Progress savedProgress = progressService.addOrUpdateProgress(pro);
 
         return ResponseEntity.ok(savedProgress);
-    }   
+    }
+    @DeleteMapping("/delete/{id}")
+    public void deleteNote(@PathVariable Long id) {
+        progressService.delete(id);
+    }
 
 
 
-    
+
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<ProgressDTO>> getProgressesByUserId(@PathVariable Long userId) {

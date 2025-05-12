@@ -3,6 +3,7 @@ package com.project.englishweb.DTO;
 import com.project.englishweb.Entity.Lesson;
 
 public class ProgressDTO {
+        private Long progressId;
         private int lessonStatus;
         private int attempts;
         private Long userId;
@@ -28,15 +29,20 @@ public class ProgressDTO {
     }
 
 
-    public ProgressDTO(int lessonStatus, int attempts, Long userId, Long lessonId, Lesson lesson) {
+    public ProgressDTO(Long progressId,int lessonStatus, int attempts, Long userId, Long lessonId, Lesson lesson) {
         this.lessonStatus = lessonStatus;
         this.attempts = attempts;
         this.userId = userId;
         this.lessonId = lessonId;
         this.lesson=lesson;
+        this.progressId=progressId;
     }
     public int getLessonStatus() {
         return lessonStatus;
+    }
+
+    public Long getProgressId() {
+        return progressId;
     }
 
     public void setLessonStatus(int lessonStatus) {
