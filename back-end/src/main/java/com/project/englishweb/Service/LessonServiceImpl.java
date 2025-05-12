@@ -8,6 +8,8 @@ import com.project.englishweb.Repository.LevelRepository;
 import com.project.englishweb.Repository.TopicRepository;
 import com.project.englishweb.DTO.LessonDTO;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,54 +29,50 @@ public class LessonServiceImpl implements LessonService {
         Topic topic = topicRepository.findById(lessonDTO.getTopicId())
                 .orElseThrow(() -> new NoSuchElementException("Topic not found"));
 
-        // Tìm Level từ levelId
         Level level = levelRepository.findById(lessonDTO.getLevelId())
                 .orElseThrow(() -> new NoSuchElementException("Level not found"));
 
         String[] lines = lessonDTO.getTranscript().split("\n");
-        StringBuilder transcriptString = new StringBuilder();
-        String start = "0:00";  // Bắt đầu từ 0:00 (hoặc thời gian bắt đầu của transcript đầu tiên)
-        int id = 1;
+        JSONArray transcriptArray = new JSONArray();
+
+        String start = "0:00";
         String end = "";
-        int QuestionCount = 0;
-        // Duyệt qua từng dòng transcript
+        int id = 1;
+        int questionCount = 0;
+
         for (String line : lines) {
-            String[] parts = line.trim().split(" ", 2);  // Tách phần đầu là thời gian, phần còn lại là văn bản
+            String[] parts = line.trim().split(" ", 2);
             if (parts.length < 2) {
-                if(parts[0].charAt(parts[0].length()-3)==':'){
-                    QuestionCount++;
+                if (parts[0].charAt(parts[0].length() - 3) == ':') {
+                    questionCount++;
                     end = parts[0].trim();
                     continue;
                 }
             }
 
-            String text = line;
+            JSONObject entry = new JSONObject();
+            entry.put("id", id);
+            entry.put("text", line.trim());
+            entry.put("start", start);
+            entry.put("end", end);
 
-            transcriptString.append("Id: ").append(String.valueOf(id))
-                    .append(" Start: ").append(start)
-                    .append(" End: ").append(end)
-                    .append(" Text: ").append(text)
-                    .append("\n");
+            transcriptArray.put(entry);
 
-            // Cập nhật thời gian bắt đầu cho dòng tiếp theo
             start = end;
             id++;
         }
 
-        // Chuyển transcript thành String
-        String transcript = transcriptString.toString();
+        String transcript = transcriptArray.toString(2);
 
-        // Tạo bài học mới và lưu vào cơ sở dữ liệu
         Lesson lesson = new Lesson();
         lesson.setTitle(lessonDTO.getTitle());
-        lesson.setLevel(level);  // Gán level từ DTO
+        lesson.setLevel(level);
         lesson.setURL(lessonDTO.getURL());
         lesson.setTopic(topic);
         lesson.setLevelName(level.getName());
-        lesson.setTranscript(transcript);  // Lưu transcript dưới dạng String
-        lesson.setQuestionCount(QuestionCount);
+        lesson.setTranscript(transcript);
+        lesson.setQuestionCount(questionCount);
 
-        // Lưu bài học vào cơ sở dữ liệu
         return lessonRepository.save(lesson);
     }
 
@@ -105,39 +103,44 @@ public class LessonServiceImpl implements LessonService {
                 .orElseThrow(() -> new NoSuchElementException("Topic không tồn tại"));
 
         String[] lines = lessonDTO.getTranscript().split("\n");
-        StringBuilder transcriptString = new StringBuilder();
+        JSONArray transcriptArray = new JSONArray();
+
         String start = "0:00";
-        int ID = 1;
         String end = "";
-        int QuestionCount = 0;
-        // Duyệt qua từng dòng transcript
+        int ID = 1;
+        int questionCount = 0;
+
         for (String line : lines) {
             String[] parts = line.trim().split(" ", 2);
             if (parts.length < 2) {
-                if(parts[0].charAt(parts[0].length()-3)==':'){
-                    QuestionCount++;
+                if (parts[0].charAt(parts[0].length() - 3) == ':') {
+                    questionCount++;
                     end = parts[0].trim();
                     continue;
                 }
             }
 
-            String text = line;
-            transcriptString.append("Id: ").append(String.valueOf(ID))
-                    .append(" Start: ").append(start)
-                    .append(" End: ").append(end)
-                    .append(" Text: ").append(text)
-                    .append("\n");
+            JSONObject entry = new JSONObject();
+            entry.put("id", ID);
+            entry.put("text", line.trim());
+            entry.put("start", start);
+            entry.put("end", end);
+
+            transcriptArray.put(entry);
+
             start = end;
             ID++;
         }
-        String transcript = transcriptString.toString();
+
+        String transcript = transcriptArray.toString(2);
         lesson.setTitle(lessonDTO.getTitle());
         lesson.setLevel(level);
         lesson.setLevelName(level.getName());
         lesson.setURL(lessonDTO.getURL());
         lesson.setTopic(topic);
         lesson.setTranscript(transcript);
-        lesson.setQuestionCount(QuestionCount);
+        lesson.setQuestionCount(questionCount);
+
         return lessonRepository.save(lesson);
     }
 
@@ -150,10 +153,12 @@ public class LessonServiceImpl implements LessonService {
     public List<Lesson> getLessonsByTitle(String title) {
         return lessonRepository.findByTitle(title);
     }
+
     @Override
     public List<Lesson> getLessonsByTopicId(Long topicId) {
         return lessonRepository.findByTopicTopicId(topicId);
     }
+
     @Override
     public Page<Lesson> searchLessons(String title, String levelName, String topicTitle, Pageable pageable) {
         return lessonRepository.findByTitleAndLevelNameAndTopicTitleWithSearch(title, levelName, topicTitle, pageable);
