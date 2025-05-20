@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import NotePopup from "../../pages/Note/NotePopup";
+import NotePopup from "../../pages/Note/NotePopup.jsx";
 import axios from "axios";
 
 const Navbar = ({ userData }) => {
@@ -300,7 +300,7 @@ const Navbar = ({ userData }) => {
         </div>
       </nav>
       {showNotes && (
-        <NotePopup isOpen={showNotes} onClose={() => setShowNotes(false)} />
+        <NotePopup isOpen={showNotes} onClose={() => setShowNotes(false)} userData={userData} />
       )}
     </>
   );

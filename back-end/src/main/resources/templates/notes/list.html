@@ -22,8 +22,8 @@
                     <tr>
                         <th>ID</th>
                         <th>Note Content</th>
-                        <th>User ID</th>
-                        <th>Lesson ID</th>
+                        <th>User</th>
+                        <th>Lesson</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -31,8 +31,9 @@
                     <tr th:each="note : ${notes}">
                         <td th:text="${note.noteId}"></td>
                         <td th:text="${note.content}"></td>
-                        <td th:text="${note.userId}"></td>
-                        <td th:text="${note.lessonId}"></td>
+                        <td th:text="${note.username}"></td>
+                        <td th:text="${note.lessonTitle}"></td>
+
                         <td>
                             <a th:href="@{/notes/edit/{id}(id=${note.noteId})}" class="btn btn-primary btn-sm">Edit</a>
                             <a th:href="@{/notes/delete/{id}(id=${note.noteId})}" class="btn btn-danger btn-sm" th:onclick="return confirm('Are you sure?')">Delete</a>
