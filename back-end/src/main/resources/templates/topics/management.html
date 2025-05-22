@@ -25,6 +25,11 @@
                                 th:if="${editTopicId == null}">
                             Add New Topic
                         </button>
+                        <button id="showCreateParentFormBtn" class="btn btn-info btn-sm"
+                                onclick="document.getElementById('createParentTopicFormContainer').style.display='block'; this.style.display='none'; document.getElementById('showCreateFormBtn').style.display='inline-block';"
+                                th:if="${editTopicId == null}" style="margin-left: 8px;">
+                            Add New Parent Topic
+                        </button>
                         <a th:if="${editTopicId != null}" th:href="@{/topics}" class="btn btn-default btn-sm">Back</a>
                     </div>
                 </div>
@@ -50,7 +55,10 @@
                             </div>
                             <div class="form-group">
                                 <label>Parent Topic</label>
-                                <textarea class="form-control" th:field="*{detail}" rows="3"></textarea>
+                                <select class="form-control" th:field="*{parentId}">
+                                    <option value="">--No Parent--</option>
+                                    <option th:each="pt : ${parentTopics}" th:value="${pt.topicId}" th:text="${pt.title}"></option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label>Detail</label>
@@ -59,6 +67,29 @@
                             <button type="submit" class="btn btn-primary">Save Topic</button>
                             <button type="button" class="btn btn-default"
                                     onclick="document.getElementById('createTopicFormContainer').style.display='none'; document.getElementById('showCreateFormBtn').style.display='inline-block';">
+                                Cancel
+                            </button>
+                        </form>
+                    </div>
+                    <!-- FORM TẠO MỚI PARENT TOPIC -->
+                    <div id="createParentTopicFormContainer" style="display: none; margin-top: 20px;" th:if="${editTopicId == null}">
+                        <h3>Add New Parent Topic</h3>
+                        <form role="form" th:action="@{/topics/add-parent}" method="post">
+                            <div class="form-group">
+                                <label>Parent Topic Title</label>
+                                <input type="text" class="form-control" name="title" required/>
+                            </div>
+                            <div class="form-group">
+                                <label>Delete Existing Parent Topic</label>
+                                <select class="form-control" name="deleteParentId">
+                                    <option value="">--Select Parent Topic to Delete--</option>
+                                    <option th:each="pt : ${parentTopics}" th:value="${pt.topicId}" th:text="${pt.title}"></option>
+                                </select>
+                                <small class="text-muted">Warning: Deleting a parent topic will also delete all its child topics.</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Parent Topic</button>
+                            <button type="button" class="btn btn-default"
+                                    onclick="document.getElementById('createParentTopicFormContainer').style.display='none'; document.getElementById('showCreateParentFormBtn').style.display='inline-block';">
                                 Cancel
                             </button>
                         </form>
@@ -78,17 +109,17 @@
                                     <option th:each="level : ${levels}"
                                             th:value="${level.levelId}"
                                             th:text="${level.name}"
-                                            th:selected="${level.levelId == editTopicDTO.levelId}">--Select Level--</option>
+                                            th:selected="${level.levelId == editTopicDTO.levelId}"></option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Parent Topic</label>
                                 <select class="form-control" th:field="*{parentId}">
-                                    <option value="">Unexist Parent Topic</option>
-                                    <option th:each="topic : ${topics.content}"
-                                            th:value="${topic.topicId}"
-                                            th:text="${topic.title}"
-                                            th:selected="${topic.topicId == editTopicDTO.parentId}"></option>
+                                    <option value="">--No Parent--</option>
+                                    <option th:each="pt : ${parentTopics}"
+                                            th:value="${pt.topicId}"
+                                            th:text="${pt.title}"
+                                            th:selected="${pt.topicId == editTopicDTO.parentId}"></option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -113,7 +144,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="topic : ${topics.content}">
+                            <tr th:each="topic : ${topics}">
                                 <td th:text="${topic.title}"></td>
                                 <td th:text="${topic.level != null} ? ${topic.level.name} : 'Không có'"></td>
                                 <td th:text="${topic.parent != null} ? ${topic.parent.title} : 'Không có'"></td>
@@ -126,6 +157,30 @@
                             </tr>
                             </tbody>
                         </table>
+
+                        <!-- DANH SÁCH PARENT TOPIC -->
+                        <h3>Parent Topics</h3>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Parent Topic</th>
+                                <th>Operation</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="pt : ${parentTopics}">
+                                <td th:text="${pt.title}"></td>
+                                <td>
+                                    <a th:href="@{/topics/delete/{id}(id=${pt.topicId})}" 
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Bạn có chắc chắn muốn xóa parent topic này? Tất cả các topic con sẽ bị xóa theo.')">
+                                        Delete Parent Topic
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
                         <!-- PHÂN TRANG -->
                         <div class="box-footer clearfix">
                             <ul class="pagination pagination-sm no-margin pull-right">

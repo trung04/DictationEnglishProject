@@ -22,38 +22,31 @@ public class Topic {
     @Column(nullable = false)
     private String title;
 
-
     @Column(columnDefinition = "TEXT")
     private String detail;
 
     @ManyToOne
-    @JoinColumn(name = "levelId", nullable = false) // Khóa ngoại
+    @JoinColumn(name = "level_id", nullable = false)
     private Level level;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
-    private Topic parent; // Topic cha
+    private Topic parent;
+
     @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Lesson> lessons = new ArrayList<>();
 
 
-//    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Lesson> lessons;
-//    public String getTitle() {
-//        return title;
-//    }
-//
-   public void setTitle(String title) {
-       this.title = title;
-   }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-   public String getDetail() {
-       return detail;
-   }
+    public String getDetail() {
+        return detail;
+    }
 
-   public void setDetail(String detail) {
-       this.detail = detail;
-   }
-
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
 }

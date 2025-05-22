@@ -78,10 +78,16 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public void deleteTopic(Long id) {
-        if (!topicRepository.existsById(id)) {
-            throw new NoSuchElementException("Topic not found with id: " + id);
+        Topic topic = topicRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Topic not found with id: " + id));
+
+        // Kiểm tra xem topic có phải là parent của topic khác không
+        List<Topic> childTopics = topicRepository.findByParentTopicId(id);
+        if (!childTopics.isEmpty()) {
+            throw new IllegalStateException("Cannot delete topic because it is a parent of other topics. Please delete or reassign child topics first.");
         }
-        topicRepository.deleteById(id);
+
+        topicRepository.delete(topic);
     }
 
     @Override
@@ -97,5 +103,10 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public Page<Topic> searchTopics(String title, String levelName, Pageable pageable) {
         return topicRepository.findByTitleAndLevelNameWithSearch(title, levelName, pageable);
+    }
+
+    @Override
+    public Page<Topic> findByParentIsNotNull(Pageable pageable) {
+        return topicRepository.findByParentIsNotNull(pageable);
     }
 } 

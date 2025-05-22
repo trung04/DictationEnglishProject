@@ -25,4 +25,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
             @Param("levelName") String levelName,
             Pageable pageable
     );
+
+    @Query("SELECT t FROM Topic t WHERE t.parent IS NOT NULL")
+    Page<Topic> findByParentIsNotNull(Pageable pageable);
 }

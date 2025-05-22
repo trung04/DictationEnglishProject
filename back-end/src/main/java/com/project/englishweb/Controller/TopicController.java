@@ -10,9 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/topics")
@@ -44,16 +46,15 @@ public class TopicController {
             model.addAttribute("searchTitle", title);
             model.addAttribute("searchLevelName", levelName);
         } else {
-            topicsPage = topicService.getAllTopics(pageable);
+            topicsPage = topicService.findByParentIsNotNull(pageable);
         }
 
+        model.addAttribute("parentTopics", topicService.findByParentIsNull());
         model.addAttribute("topics", topicsPage);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", topicsPage.getTotalPages());
         model.addAttribute("activePage", "topics");
         model.addAttribute("topicDTO", new TopicDTO());
-        model.addAttribute("editTopicDTO", new TopicDTO());
-        model.addAttribute("editTopicId", editId);
 
         if (editId != null) {
             Topic topicToEdit = topicService.getTopicById(editId);
@@ -66,14 +67,8 @@ public class TopicController {
                     editDTO.setParentId(topicToEdit.getParent().getTopicId());
                 }
                 model.addAttribute("editTopicDTO", editDTO);
+                model.addAttribute("editTopicId", editId);
             }
-        }
-
-        try {
-            // code lấy dữ liệu
-        } catch (Exception e) {
-            log.error("Error in topicManagement: ", e);
-            throw e; // hoặc trả về view lỗi tùy ý
         }
 
         return "topics/management";
@@ -95,5 +90,24 @@ public class TopicController {
     public String deleteTopic(@PathVariable Long id) {
         topicService.deleteTopic(id);
         return "redirect:/topics";
+    }
+
+    @PostMapping("/add-parent")
+    public String createParentTopic(@RequestParam String title) {
+        try {
+            // Tạo parent topic mới
+            Level defaultLevel = levelService.getAllLevels().stream().findFirst().orElse(null);
+            TopicDTO parentTopicDTO = new TopicDTO();
+            parentTopicDTO.setTitle(title);
+            parentTopicDTO.setDetail("");
+            parentTopicDTO.setLevelId(defaultLevel != null ? defaultLevel.getLevelId() : null);
+            parentTopicDTO.setParentId(null);
+            topicService.createTopic(parentTopicDTO);
+            
+            return "redirect:/topics";
+        } catch (Exception e) {
+            log.error("Error in createParentTopic: ", e);
+            return "redirect:/topics?error=" + e.getMessage();
+        }
     }
 }

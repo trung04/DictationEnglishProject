@@ -13,6 +13,7 @@ import java.util.List;
 public class Level {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "level_id") // Đúng với database
     private Long LevelId;
 
     @Column(nullable = false)

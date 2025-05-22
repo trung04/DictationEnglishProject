@@ -4,7 +4,7 @@ import com.project.englishweb.DTO.ProgressDTO;
 import com.project.englishweb.Entity.Lesson;
 import com.project.englishweb.Entity.Progress;
 import com.project.englishweb.Entity.User;
-import com.project.englishweb.repository.ProgressRepository;
+import com.project.englishweb.Repository.ProgressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
