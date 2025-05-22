@@ -74,18 +74,14 @@
                     <!-- FORM TẠO MỚI PARENT TOPIC -->
                     <div id="createParentTopicFormContainer" style="display: none; margin-top: 20px;" th:if="${editTopicId == null}">
                         <h3>Add New Parent Topic</h3>
-                        <form role="form" th:action="@{/topics/add-parent}" method="post">
+                        <form role="form" th:action="@{/topics/add-parent}" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label>Parent Topic Title</label>
                                 <input type="text" class="form-control" name="title" required/>
                             </div>
                             <div class="form-group">
-                                <label>Delete Existing Parent Topic</label>
-                                <select class="form-control" name="deleteParentId">
-                                    <option value="">--Select Parent Topic to Delete--</option>
-                                    <option th:each="pt : ${parentTopics}" th:value="${pt.topicId}" th:text="${pt.title}"></option>
-                                </select>
-                                <small class="text-muted">Warning: Deleting a parent topic will also delete all its child topics.</small>
+                                <label>Parent Topic Image</label>
+                                <input type="file" class="form-control" name="image" accept="image/*" required/>
                             </div>
                             <button type="submit" class="btn btn-primary">Save Parent Topic</button>
                             <button type="button" class="btn btn-default"
@@ -163,18 +159,22 @@
                         <table class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th>Parent Topic</th>
+                                <th style="width: 180px;">Parent Topic</th>
+                                <th style="width: 180px;">Image</th>
                                 <th>Operation</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="pt : ${parentTopics}">
-                                <td th:text="${pt.title}"></td>
+                                <td style="width: 180px;" th:text="${pt.title}"></td>
+                                <td style="width: 180px;">
+                                    <img th:if="${pt.parentImagePath != null}" th:src="@{${pt.parentImagePath}}" style="max-width: 80px; max-height: 80px;">
+                                </td>
                                 <td>
                                     <a th:href="@{/topics/delete/{id}(id=${pt.topicId})}" 
                                        class="btn btn-danger btn-sm"
                                        onclick="return confirm('Bạn có chắc chắn muốn xóa parent topic này? Tất cả các topic con sẽ bị xóa theo.')">
-                                        Delete Parent Topic
+                                        Delete
                                     </a>
                                 </td>
                             </tr>

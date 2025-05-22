@@ -36,6 +36,7 @@ public class TopicServiceImpl implements TopicService {
         topic.setDetail(topicDTO.getDetail());
         topic.setLevel(level);
         topic.setParent(parent);
+        topic.setParentImagePath(topicDTO.getParentImagePath());
 
         return topicRepository.save(topic);
     }
@@ -72,6 +73,7 @@ public class TopicServiceImpl implements TopicService {
         topic.setDetail(topicDTO.getDetail());
         topic.setLevel(level);
         topic.setParent(parent);
+        topic.setParentImagePath(topicDTO.getParentImagePath());
 
         return topicRepository.save(topic);
     }

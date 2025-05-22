@@ -33,6 +33,9 @@ public class Topic {
     @JoinColumn(name = "parent_id")
     private Topic parent;
 
+    @Column(name = "parent_image_path")
+    private String parentImagePath;
+
     @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Lesson> lessons = new ArrayList<>();

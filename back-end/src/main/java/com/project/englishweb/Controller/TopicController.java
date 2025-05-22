@@ -93,17 +93,25 @@ public class TopicController {
     }
 
     @PostMapping("/add-parent")
-    public String createParentTopic(@RequestParam String title) {
+    public String createParentTopic(@RequestParam String title,
+                                   @RequestParam("image") MultipartFile image) {
         try {
-            // Tạo parent topic mới
+            String fileName = java.util.UUID.randomUUID() + "_" + image.getOriginalFilename();
+            java.nio.file.Path uploadPath = java.nio.file.Paths.get("uploads/parent-topics");
+            if (!java.nio.file.Files.exists(uploadPath)) java.nio.file.Files.createDirectories(uploadPath);
+            java.nio.file.Path filePath = uploadPath.resolve(fileName);
+            java.nio.file.Files.copy(image.getInputStream(), filePath);
+
             Level defaultLevel = levelService.getAllLevels().stream().findFirst().orElse(null);
             TopicDTO parentTopicDTO = new TopicDTO();
             parentTopicDTO.setTitle(title);
             parentTopicDTO.setDetail("");
             parentTopicDTO.setLevelId(defaultLevel != null ? defaultLevel.getLevelId() : null);
             parentTopicDTO.setParentId(null);
+            parentTopicDTO.setParentImagePath("/uploads/parent-topics/" + fileName);
+
             topicService.createTopic(parentTopicDTO);
-            
+
             return "redirect:/topics";
         } catch (Exception e) {
             log.error("Error in createParentTopic: ", e);

@@ -10,5 +10,6 @@ public class TopicDTO {
     private String detail;
     private Long levelId;
     private Long parentId;
+    private String parentImagePath;
 }
 
