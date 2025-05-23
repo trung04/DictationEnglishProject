@@ -15,9 +15,12 @@ public class NoteMapper {
                 note.getNoteId(),
                 note.getContent(),
                 note.getUser().getUserId(),
-                note.getLesson().getLessonId()
+                note.getUser().getUsername(),        // Thêm username
+                note.getLesson().getLessonId(),
+                note.getLesson().getTitle()          // Thêm lesson title
         );
     }
+
 
     public Note toEntity(NoteDTO dto, User user, Lesson lesson) {
         Note note = new Note();

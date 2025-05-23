@@ -16,4 +16,5 @@ public interface TopicService {
     List<Topic> findByParentIsNull();
     List<Topic> findByParentTopicId(Long parentId);
     Page<Topic> searchTopics(String title, String levelName, Pageable pageable);
+    Page<Topic> findByParentIsNotNull(Pageable pageable);
 }
