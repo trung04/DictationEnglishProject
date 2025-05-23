@@ -66,7 +66,7 @@ public class TopicImageServiceImpl implements TopicImageService {
 
     @Override
     public List<TopicImageDTO> getImagesByTopicId(Long topicId) {
-        return topicImageRepository.findByTopicId(topicId)
+        return topicImageRepository.findByTopic_TopicId(topicId)
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
