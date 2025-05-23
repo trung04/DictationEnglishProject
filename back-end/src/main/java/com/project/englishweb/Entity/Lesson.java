@@ -49,6 +49,11 @@ public class Lesson {
     @Column(nullable = false)
     private int questionCount;
 
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Comment> comments;
+
+
     public Long getLessonId() {
         return lessonId;
     }

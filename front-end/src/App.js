@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
+import Comment from "./pages/Comment";
 import Exercises from "./pages/Exercises";
 import TopUsers from "./pages/TopUsers";
 import ListExercise from "./pages/ListExercise";
@@ -17,6 +18,8 @@ import ListTopic from "./pages/ListTopic";
 import { Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import FinishTest from "./pages/FinishTest";
+
 function App() {
   const isLoggedIn = JSON.parse(localStorage.getItem("keepLoggedIn"));
   const token = localStorage.getItem("token");
@@ -26,7 +29,7 @@ function App() {
     // Lấy token từ localStorage
     const token = localStorage.getItem("token");
     console.log(token);
-    // localStorage.clear();
+
     if (token) {
       // Nếu có token, gọi API để lấy thông tin người dùng
       axios
@@ -39,7 +42,8 @@ function App() {
           setUserData(response.data); // Lưu thông tin người dùng vào state
         })
         .catch((err) => {
-          console.error(err);
+          console.log("lỗi");
+          localStorage.clear();
           setError("Không thể lấy thông tin người dùng.");
         });
     } else {
@@ -52,7 +56,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout userData={userData} />}>
+            <Route path="test-comment" element={<Comment />}></Route>
             <Route index element={<Home />} />
+            <Route path="finish-test/:lessonId" element={<FinishTest />} />
             <Route path="exercises" element={<Exercises />}>
               <Route index element={<ListTopic />} />
               <Route path=":id" element={<ListExercise />}></Route>

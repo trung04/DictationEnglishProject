@@ -12,24 +12,9 @@ const Footer = () => {
                 <a className="nav-link" href="/exercises">
                   All exercises
                 </a>
-                <a className="nav-link" href="/expressions">
-                  English expressions
-                </a>
-                <a className="nav-link" href="/english-pronunciation">
-                  English pronunciation
-                </a>
               </nav>
             </div>
-            <div className="col-6 col-md-3">
-              <nav className="nav flex-column">
-                <a className="nav-link" href="/top-users">
-                  Top users
-                </a>
-                <a className="nav-link" href="/discussions">
-                  Latest comments
-                </a>
-              </nav>
-            </div>
+
             <div className="col-6 col-md-3">
               {/* <nav className="nav flex-column">
                 <a className="nav-link" href="https://dailydictation.com/blog/">

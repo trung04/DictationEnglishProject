@@ -1,10 +1,11 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import Navbar2 from "../components/Layout/Navbar2";
 import { useState, useEffect, useRef } from "react";
 import YoutubeFrame from "../components/UI/YoutubeFrame";
 import ToggleDownSimple from "../components/UI/ToggleDownSimple";
 import Input from "../components/UI/Input";
 import axios from "axios";
+import Comment from "./Comment";
 // dữ liệu mẫu
 
 // Hàm so sánh văn bản và tìm các từ không khớp
@@ -47,6 +48,11 @@ const DetailExercise = ({ userData }) => {
   const [showInput, setShowInput] = useState(false);
   // const inputWords = inputText.trim().split(" ");
   const [lesson, setLesson] = useState([]);
+  //comment của bài
+  const [comment, setComment] = useState([]);
+
+  //navigate
+  const navigate = useNavigate();
 
   //demo
   const [challengeId, setChallengeId] = useState(1);
@@ -132,11 +138,24 @@ const DetailExercise = ({ userData }) => {
     if (status == 1 && challengeId < challenges.length) {
       newChallengeId = challengeId + 1;
     }
+    if (challengeId == challenges.length && result == "Correct") {
+      try {
+        const res = await axios.delete(
+          `http://localhost:8080/api/progress/delete/${lesson?.progresses[0]?.progressId}`
+        );
+        navigate(`/finish-test/${id}`);
+      } catch (e) {
+        console.log(e);
+      }
+      alert("bạn đã hoàn thành bài thi !");
+
+      return;
+      //làm chỗ này
+    }
+    console.log(challengeId + " " + challenges.length);
     setChallengeId(newChallengeId);
 
     if (userData?.userId) {
-      console.log("thành công blala");
-
       const addProgress = async () => {
         try {
           const res = await axios.post(
@@ -194,6 +213,7 @@ const DetailExercise = ({ userData }) => {
       .get(`http://localhost:8080/api/lessons/${id}`)
       .then((response) => {
         setLesson(response.data);
+        console.log(response.data);
         setChallenges(JSON.parse(response.data.transcript));
       })
       .catch((error) => {
@@ -266,7 +286,7 @@ const DetailExercise = ({ userData }) => {
           </div>
           <div className="text-muted d-inline-block ms-1">
             <div className="dropdown">
-              <Link
+              {/* <Link
                 className="btn border-0"
                 to="#"
                 role="button"
@@ -274,34 +294,7 @@ const DetailExercise = ({ userData }) => {
                 aria-expanded="false"
               >
                 <i className="bi bi-three-dots text-muted"></i>
-              </Link>
-
-              <ul className="dropdown-menu">
-                <li>
-                  <Link className="dropdown-item" to="/user/reset-lesson/1470">
-                    <i className="bi bi-arrow-clockwise"></i> Reset (keep the
-                    star)
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="dropdown-item js-btn-toggle-favorite"
-                    to="#"
-                    data-lesson-id="1470"
-                    data-is-added="0"
-                    data-should-alert="1"
-                  >
-                    <span className="js-add-favorite-text ">
-                      <i className="bi bi-heart"></i>
-                      Add to favorite list
-                    </span>
-                    <span className="js-remove-favorite-text d-none">
-                      <i className="bi bi-heart"></i>
-                      Remove from favorite list
-                    </span>
-                  </Link>
-                </li>
-              </ul>
+              </Link> */}
             </div>
           </div>
         </div>
@@ -411,7 +404,7 @@ const DetailExercise = ({ userData }) => {
                               >
                                 <span>{challengeId}</span>
                                 <span> / </span>
-                                <span>55</span>
+                                <span>{lesson.questionCount}</span>
                               </button>
                             </div>
                           </div>
@@ -445,9 +438,6 @@ const DetailExercise = ({ userData }) => {
                           class="btn btn-primary me-3"
                         >
                           Check
-                        </button>
-                        <button id="btn-skip" class="btn btn-outline-secondary">
-                          Skip
                         </button>
                       </div>
                       {result == "Correct" && (
@@ -500,6 +490,8 @@ const DetailExercise = ({ userData }) => {
           </div>
         </div>
       </div>
+
+      <Comment comments={lesson} />
     </>
   );
 };
