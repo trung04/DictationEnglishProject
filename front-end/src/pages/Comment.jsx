@@ -10,7 +10,7 @@ const Comment = () => {
   const { id } = useParams();
   const user = JSON.parse(localStorage?.getItem("user"));
   const [comments, setComments] = useState([]);
-  const [comment, setComment] = useState(null);
+  const [comment, setComment] = useState("");
   const [index, setIndex] = useState(3);
   const [isEdit, setIsEdit] = useState(null);
   const [commentEdit, setCommentEdit] = useState(null);
@@ -58,6 +58,10 @@ const Comment = () => {
     }
   };
   const handleSubmit = async (e) => {
+    if (comment == "") {
+      alert("Hãy viêt comment !");
+      return 0;
+    }
     try {
       const res = await axios.post(
         "http://localhost:8080/api/comment/addComment",
@@ -72,6 +76,7 @@ const Comment = () => {
       fetchData();
       setComment("");
     } catch (e) {
+      alert("Hãy đăng nhập để comment bài học!");
       console.log(e);
     }
   };
@@ -191,7 +196,13 @@ const Comment = () => {
 
                       {/* Delete button */}
                       <button
-                        onClick={() => handleDeleteComment(comment?.commentId)}
+                        onClick={() => {
+                          if (
+                            window.confirm("Bạn có chắc chắn xóa comment !")
+                          ) {
+                            handleDeleteComment(comment?.commentId);
+                          }
+                        }}
                         className="btn btn-sm d-flex align-items-center gap-1 text-danger"
                         style={{ background: "transparent", border: "none" }}
                       >
