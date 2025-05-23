@@ -1,12 +1,9 @@
 package com.project.englishweb.Service.API;
 import com.project.englishweb.DTO.CommentApiDTO;
-import com.project.englishweb.DTO.CommentDTO;
 import com.project.englishweb.Entity.Comment;
 import com.project.englishweb.Entity.Lesson;
-import com.project.englishweb.Entity.Question;
 import com.project.englishweb.Entity.User;
 import com.project.englishweb.Repository.CommentRepository;
-import com.project.englishweb.Repository.QuestionRepository;
 import com.project.englishweb.Repository.UserRepository;
 import com.project.englishweb.Repository.LessonRepository;
 import org.springframework.stereotype.Service;
@@ -14,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+
 @Service
 public class CommentApiSevice {
     private final CommentRepository commentRepository;
@@ -43,5 +42,14 @@ public class CommentApiSevice {
     public List<Comment> findAll(){
           return  commentRepository.findAll();
     }
-
+    public String delete(Long commentId){
+        commentRepository.deleteById(commentId);
+        return "success";
+    }
+        public Comment update(Long commentId,String newContent){
+            Comment comment = commentRepository.findById(commentId)
+                    .orElseThrow(() -> new RuntimeException("Comment not found with id " + commentId));
+            comment.setContent(newContent);
+            return commentRepository.save(comment);
+    }
 }

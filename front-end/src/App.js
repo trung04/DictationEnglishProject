@@ -40,6 +40,7 @@ function App() {
         })
         .then((response) => {
           setUserData(response.data); // Lưu thông tin người dùng vào state
+          localStorage.setItem("user", JSON.stringify(response.data));
         })
         .catch((err) => {
           console.log("lỗi");

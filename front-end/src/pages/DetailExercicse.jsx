@@ -491,7 +491,7 @@ const DetailExercise = ({ userData }) => {
         </div>
       </div>
 
-      <Comment comments={lesson} />
+      <Comment lesson={lesson} />
     </>
   );
 };
