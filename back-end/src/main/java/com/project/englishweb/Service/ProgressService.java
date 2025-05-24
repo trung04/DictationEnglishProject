@@ -1,10 +1,13 @@
 package com.project.englishweb.Service;
 
+import com.project.englishweb.DTO.NoteDTO;
 import com.project.englishweb.DTO.ProgressDTO;
 import com.project.englishweb.Entity.Lesson;
+import com.project.englishweb.Entity.Note;
 import com.project.englishweb.Entity.Progress;
 import com.project.englishweb.Entity.User;
-import com.project.englishweb.Repository.ProgressRepository;
+import com.project.englishweb.repository.ProgressRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +49,19 @@ public class ProgressService {
         }
 
         return progressRepository.save(progress);
+    }
+
+    public void update(Long progressId){
+        Optional<Progress> pro = progressRepository.findById(progressId);
+        if (pro.isPresent()) {
+            Progress progress = pro.get();
+            progress.setLessonStatus(1);
+            progressRepository.save(progress);
+        } else {
+            throw new RuntimeException("Progress với ID " + progressId + " không tồn tại.");
+        }
+
+
     }
 
     public void delete(Long progressId) {

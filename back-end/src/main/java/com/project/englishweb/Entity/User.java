@@ -1,5 +1,6 @@
 package com.project.englishweb.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -28,6 +29,18 @@ public class User {
     private int activeDays;
     private int activeHours;
 
+    @Column(name = "role", nullable = false, columnDefinition = "INT DEFAULT 0")
+    private int role = 0;
+//    private int role;
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
     // Thêm trường createdAt
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -36,6 +49,7 @@ public class User {
     private List<Progress> progresses;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

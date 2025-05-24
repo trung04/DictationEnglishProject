@@ -89,35 +89,11 @@ const Navbar = ({ userData }) => {
                   All exercises
                 </Link>
               </li>
-              <li className="nav-item me-1">
+              {/* <li className="nav-item me-1">
                 <Link className="nav-link px-3 py-1" to="/top-users">
                   Top users
                 </Link>
-              </li>
-
-              <li className="nav-item me-1 dropdown active">
-                <Link
-                  href="#"
-                  id="nav-dropdown-videos"
-                  className="nav-link dropdown-toggle px-3 py-1"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Video lessons
-                </Link>
-                <div
-                  className="dropdown-menu"
-                  aria-labelledby="nav-dropdown-videos"
-                >
-                  <Link className="dropdown-item" to="/expressions">
-                    English expressions
-                  </Link>
-                  <Link className="dropdown-item" to="/english-pronunciation">
-                    English pronunciation
-                  </Link>
-                </div>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
@@ -252,9 +228,9 @@ const Navbar = ({ userData }) => {
                       Notifications
                       <span className="badge bg-danger rounded-pill"></span>
                     </Link> */}
-                      <Link className="dropdown-item" to="/user/comments">
+                      {/* <Link className="dropdown-item" to="/user/comments">
                         Comments
-                      </Link>
+                      </Link> */}
 
                       <Link
                         className="dropdown-item"

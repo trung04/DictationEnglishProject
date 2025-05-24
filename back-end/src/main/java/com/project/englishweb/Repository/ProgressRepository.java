@@ -1,4 +1,4 @@
-package com.project.englishweb.Repository;
+package com.project.englishweb.repository;
 
 import com.project.englishweb.DTO.ProgressDTO;
 import org.springframework.data.jpa.repository.JpaRepository;

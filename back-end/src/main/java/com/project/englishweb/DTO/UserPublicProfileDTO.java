@@ -11,4 +11,5 @@ public class UserPublicProfileDTO {
     private String email;
     private int activeDays;
     private int activeHours;
+    private int role;
 }

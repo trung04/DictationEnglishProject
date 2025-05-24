@@ -12,5 +12,6 @@ public class LessonDTO {
     private Long topicId;
     private String levelName;
     private String transcript;
+    private String translate;
     private int questionCount;
 }

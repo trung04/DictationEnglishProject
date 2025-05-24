@@ -36,12 +36,25 @@ const Login = () => {
         }
       );
 
-      const token = response.data.token;
-      localStorage.setItem("token", token);
-      localStorage.setItem("keepLoggedIn", JSON.stringify(true));
-      window.location.reload();
-      navigate("/");
-      // navigate hoặc cập nhật UI tại đây
+      const token = await response.data.token;
+      if (token) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("keepLoggedIn", JSON.stringify(true));
+        const res2 = await axios.get(
+          "http://localhost:8080/api/user/account-info",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Thêm token vào header
+            },
+          }
+        );
+        const user = res2.data;
+        if (user.role == 0) {
+          window.location.reload();
+          navigate("/");
+          // navigate hoặc cập nhật UI tại đây
+        }
+      }
     } catch (err) {
       console.log(err);
       setError("Sai tài khoản hoặc mật khẩu!");

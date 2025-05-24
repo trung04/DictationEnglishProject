@@ -48,6 +48,13 @@ public class Lesson {
     private String transcript;
     @Column(nullable = false)
     private int questionCount;
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String translate;
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Comment> comments;
+
 
     public Long getLessonId() {
         return lessonId;

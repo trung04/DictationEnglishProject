@@ -15,4 +15,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByQuestionQuestionIdOrderByLikeDesc(Long questionId);
     List<Comment> findByQuestionQuestionIdOrderByDislikeDesc(Long questionId);
     Page<Comment> findAll(Pageable pageable);
+
 }

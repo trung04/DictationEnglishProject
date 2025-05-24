@@ -76,6 +76,7 @@ public class LessonController {
                 editDTO.setTopicId(lessonToEdit.getTopic().getTopicId());
                 editDTO.setTranscript(lessonToEdit.getTranscript());  
                 editDTO.setQuestionCount(lessonToEdit.getQuestionCount());
+                editDTO.setTranslate(lessonToEdit.getTranslate());
                 model.addAttribute("editLessonDTO", editDTO);
             }
         }

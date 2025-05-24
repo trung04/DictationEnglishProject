@@ -11,5 +11,6 @@ public class UserAccountDTO {
     private String email;
     private int activeDays;
     private int activeHours;
-    private String createdAt;  
+    private String createdAt;
+    private int role;
 }

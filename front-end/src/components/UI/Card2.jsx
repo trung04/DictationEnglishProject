@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 const Card2 = (props) => {
   const lesson = props.lesson;
+  const { topicId } = props;
   return (
     <>
       <div className="bg-body-tertiary p-2 border rounded mb-3">
