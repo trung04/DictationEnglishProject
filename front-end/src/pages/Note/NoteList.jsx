@@ -72,10 +72,6 @@ const NoteList = ({ userData }) => {
           <li key={note.noteId} className="list-group-item pt-0">
             <div className="d-flex align-items-center mb-2">
               <div className="flex-grow-1">
-                <small className="text-secondary">
-                  {note.lessonId === 1 ? "" :
-                    <a href="#" className="text-secondary">Lesson #{note.lessonId}</a>}
-                </small>
               </div>
               <button
                 className="btn btn-sm text-muted text-decoration-underline"

@@ -5,20 +5,18 @@ function NoteForm({ onCancel, onSuccess, noteId, userData }) {
   const [note, setNote] = useState(null);
 
   useEffect(() => {
-    if (noteId) {
-      // Nếu đang sửa
-      axios.get(`http://localhost:8080/api/notes/${noteId}`)
-        .then(res => setNote(res.data))
-        .catch(err => console.error("Error:", err));
-    } else if (userData && userData.userId) {
-      // Nếu đang thêm mới
-      setNote({
-        content: "",
-        userId: userData.userId,
-        lessonId: 1
-      });
-    }
-  }, [noteId, userData]);
+  if (noteId) {
+    axios.get(`http://localhost:8080/api/notes/${noteId}`)
+      .then(res => setNote(res.data))
+      .catch(err => console.error("Error:", err));
+  } else if (userData && userData.username) {  
+    setNote({
+      content: "",
+      username: userData.username,  
+    });
+  }
+}, [noteId, userData]);
+
 
   const handleChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
@@ -44,7 +42,7 @@ function NoteForm({ onCancel, onSuccess, noteId, userData }) {
     <div style={{ maxWidth: "500px", margin: "auto", padding: "20px" }}>
       <form onSubmit={handleSubmit}>
         <div className="form-group mb-3">
-          <label style={{ fontWeight: "bold" }}>Note content:</label>
+          <label>Add a new note:</label>
           <textarea
             name="content"
             value={note.content}

@@ -1,14 +1,11 @@
 package com.project.englishweb.Service;
 
 import com.project.englishweb.DTO.NoteDTO;
-import com.project.englishweb.Entity.Lesson;
 import com.project.englishweb.Entity.Note;
 import com.project.englishweb.Entity.User;
 import com.project.englishweb.Mapper.NoteMapper;
-import com.project.englishweb.Repository.LessonRepository;
 import com.project.englishweb.Repository.NoteRepository;
 import com.project.englishweb.Repository.UserRepository;
-import com.project.englishweb.Service.NoteService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,9 +21,6 @@ public class NoteServiceImpl implements NoteService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private LessonRepository lessonRepository;
 
     @Autowired
     private NoteMapper noteMapper;
@@ -48,11 +42,9 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public NoteDTO createNote(NoteDTO dto) {
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + dto.getUserId()));
-        Lesson lesson = lessonRepository.findById(dto.getLessonId())
-                .orElseThrow(() -> new EntityNotFoundException("Lesson not found with ID: " + dto.getLessonId()));
-        Note note = noteMapper.toEntity(dto, user, lesson);
+        User user = userRepository.findByUsername(dto.getUsername())
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + dto.getUsername()));
+        Note note = noteMapper.toEntity(dto, user);
         return noteMapper.toDTO(noteRepository.save(note));
     }
 
@@ -61,14 +53,11 @@ public class NoteServiceImpl implements NoteService {
         Note existing = noteRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Note not found with ID: " + id));
 
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + dto.getUserId()));
-        Lesson lesson = lessonRepository.findById(dto.getLessonId())
-                .orElseThrow(() -> new EntityNotFoundException("Lesson not found with ID: " + dto.getLessonId()));
+        User user = userRepository.findByUsername(dto.getUsername())
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + dto.getUsername()));
 
         existing.setContent(dto.getContent());
         existing.setUser(user);
-        existing.setLesson(lesson);
 
         return noteMapper.toDTO(noteRepository.save(existing));
     }
