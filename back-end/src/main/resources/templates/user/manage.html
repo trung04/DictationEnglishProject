@@ -39,6 +39,16 @@
                                th:field="*{password}"
                                th:required="${userId == null}" />
                     </div>
+
+                    <!-- ✅ CHỌN ROLE -->
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <select id="role" class="form-control" th:field="*{role}" required>
+                            <option value="0">User</option>
+                            <option value="1">Admin</option>
+                        </select>
+                    </div>
+
                     <button type="submit" class="btn btn-success"
                             th:text="${userId != null} ? 'Update' : 'Save'"></button>
                 </form>
@@ -58,6 +68,7 @@
                         <th>ID</th>
                         <th>Username</th>
                         <th>Email</th>
+                        <th>Role</th> <!-- ✅ HIỂN THỊ ROLE -->
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -66,6 +77,10 @@
                         <td th:text="${user.userId}">1</td>
                         <td th:text="${user.username}">admin</td>
                         <td th:text="${user.email}">admin@example.com</td>
+                        <td>
+                            <span th:if="${user.role == 0}">User</span>
+                            <span th:if="${user.role == 1}">Admin</span>
+                        </td>
                         <td>
                             <a class="btn btn-warning btn-sm"
                                th:href="@{'/admin/users'(id=${user.userId})}">Edit</a>
