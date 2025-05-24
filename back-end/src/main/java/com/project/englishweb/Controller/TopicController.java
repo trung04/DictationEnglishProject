@@ -94,6 +94,7 @@ public class TopicController {
 
     @PostMapping("/add-parent")
     public String createParentTopic(@RequestParam String title,
+                                   @RequestParam(required = false) String detail,
                                    @RequestParam("image") MultipartFile image) {
         try {
             String fileName = java.util.UUID.randomUUID() + "_" + image.getOriginalFilename();
@@ -105,7 +106,7 @@ public class TopicController {
             Level defaultLevel = levelService.getAllLevels().stream().findFirst().orElse(null);
             TopicDTO parentTopicDTO = new TopicDTO();
             parentTopicDTO.setTitle(title);
-            parentTopicDTO.setDetail("");
+            parentTopicDTO.setDetail(detail != null ? detail : "");
             parentTopicDTO.setLevelId(defaultLevel != null ? defaultLevel.getLevelId() : null);
             parentTopicDTO.setParentId(null);
             parentTopicDTO.setParentImagePath("/uploads/parent-topics/" + fileName);
