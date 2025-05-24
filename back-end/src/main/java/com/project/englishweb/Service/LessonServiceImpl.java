@@ -93,6 +93,7 @@ public class LessonServiceImpl implements LessonService {
                 .orElseThrow(() -> new NoSuchElementException("Level not found"));
 
         TranscriptResult result = parseTranscript(lessonDTO.getTranscript());
+        TranscriptResult translate = parseTranscript(lessonDTO.getTranslate());
 
         Lesson lesson = new Lesson();
         lesson.setTitle(lessonDTO.getTitle());
@@ -102,7 +103,7 @@ public class LessonServiceImpl implements LessonService {
         lesson.setLevelName(level.getName());
         lesson.setTranscript(result.transcriptJson);
         lesson.setQuestionCount(result.questionCount);
-
+        lesson.setTranslate(translate.transcriptJson);
         return lessonRepository.save(lesson);
     }
 
@@ -117,6 +118,7 @@ public class LessonServiceImpl implements LessonService {
                 .orElseThrow(() -> new NoSuchElementException("Topic không tồn tại"));
 
         TranscriptResult result = parseTranscript(lessonDTO.getTranscript());
+        TranscriptResult translate = parseTranscript(lessonDTO.getTranslate());
 
         lesson.setTitle(lessonDTO.getTitle());
         lesson.setLevel(level);
@@ -125,7 +127,7 @@ public class LessonServiceImpl implements LessonService {
         lesson.setTopic(topic);
         lesson.setTranscript(result.transcriptJson);
         lesson.setQuestionCount(result.questionCount);
-
+        lesson.setTranslate(translate.transcriptJson);
         return lessonRepository.save(lesson);
     }
 
