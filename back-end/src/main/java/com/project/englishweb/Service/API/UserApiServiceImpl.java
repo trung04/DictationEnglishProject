@@ -36,6 +36,7 @@ public class UserApiServiceImpl implements UserApiService {
         dto.setUsername(user.getUsername());
         dto.setActiveDays(user.getActiveDays());
         dto.setActiveHours(user.getActiveHours());
+        dto.setRole(0);
         return dto;
     }
 
@@ -53,6 +54,7 @@ public class UserApiServiceImpl implements UserApiService {
         dto.setActiveHours(user.getActiveHours());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         dto.setCreatedAt(user.getCreatedAt().format(formatter));
+        dto.setRole(0);
         return dto;
     }
 

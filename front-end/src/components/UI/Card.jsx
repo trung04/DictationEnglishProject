@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 const Card = (props) => {
-  console.log(props);
   return (
     <>
       <div className="card border shadow-sm bg-body-tertiary">
@@ -8,7 +7,7 @@ const Card = (props) => {
           <div className="d-flex">
             <div className="me-3">
               <Link
-                to="/exercises/short-stories"
+                to={`/exercises/${props.topicId}`}
                 className="img-thumbnail p-1 d-block"
               >
                 <img
@@ -24,11 +23,11 @@ const Card = (props) => {
                 <Link to={`${props.topicId}`}>{props.name}</Link>
               </h2>
               <div>
-                <span className="text-muted">Levels:{props.level}</span>
+                {/* <span className="text-muted">Levels:{props.level}</span> */}
               </div>
               <div className="text-muted d-flex align-items-center">
                 <i className="me-1 bi bi-soundwave opacity-75"></i>
-                <span className="me-1">289 lessons</span>
+                {/* <span className="me-1">289 lessons</span> */}
                 <button
                   className="btn btn-sm js-btn-show-desc"
                   data-course-id="2"

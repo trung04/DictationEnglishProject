@@ -10,6 +10,7 @@ const ListTopic = () => {
       .get("http://localhost:8080/api/topics")
       .then((response) => {
         setTopics(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.error("Lỗi khi lấy danh sách topics:", error);
@@ -18,17 +19,18 @@ const ListTopic = () => {
   return (
     <>
       <h1>All Topics</h1>
+
       <div className="row center">
         {topics &&
           topics.map((topic, index) => {
             return (
               <div className="col-lg-4 mb-4" key={index}>
                 <Card
-                  topicId={topic.topicId}
-                  name={topic.title}
-                  level={topic.level.name}
-                  detail={topic.detail}
-                  SrcImage="https://dailydictation.com/images/dd-stories.jpg"
+                  topicId={topic?.topicId}
+                  name={topic?.title}
+                  level={topic?.level.name}
+                  detail={topic?.detail}
+                  SrcImage={`http://localhost:8080${topic?.parentImagePath}`}
                 />
               </div>
             );

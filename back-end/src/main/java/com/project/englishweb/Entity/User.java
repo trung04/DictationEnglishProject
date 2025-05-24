@@ -29,6 +29,18 @@ public class User {
     private int activeDays;
     private int activeHours;
 
+    @Column(name = "role", nullable = false, columnDefinition = "INT DEFAULT 0")
+    private int role = 0;
+//    private int role;
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
     // Thêm trường createdAt
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

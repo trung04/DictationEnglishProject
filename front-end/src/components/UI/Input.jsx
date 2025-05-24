@@ -47,12 +47,12 @@ const Input = ({ onInputChange, inputText }) => {
           style={focusGuardStyle}
         ></div>
 
-        <button
+        {/* <button
           className="btn btn-sm bg-body-tertiary border position-absolute z-3"
           style={micButtonStyle}
         >
           <i className="bi bi-mic-fill"></i>
-        </button>
+        </button> */}
       </div>
     </>
   );
