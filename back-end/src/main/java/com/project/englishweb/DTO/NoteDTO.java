@@ -10,11 +10,6 @@ import lombok.NoArgsConstructor;
 public class NoteDTO {
     private Long noteId;
     private String content;
-
     private Long userId;
     private String username;
-
-    private Long lessonId;
-    private String lessonTitle;
 }
-

@@ -22,9 +22,4 @@ public class Note {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "lessonId", nullable = false)
-    private Lesson lesson;
-
 }
-

@@ -1,7 +1,6 @@
 package com.project.englishweb.Mapper;
 
 import com.project.englishweb.DTO.NoteDTO;
-import com.project.englishweb.Entity.Lesson;
 import com.project.englishweb.Entity.Note;
 import com.project.englishweb.Entity.User;
 import org.springframework.stereotype.Component;
@@ -15,19 +14,15 @@ public class NoteMapper {
                 note.getNoteId(),
                 note.getContent(),
                 note.getUser().getUserId(),
-                note.getUser().getUsername(),        // Thêm username
-                note.getLesson().getLessonId(),
-                note.getLesson().getTitle()          // Thêm lesson title
+                note.getUser().getUsername()
         );
     }
 
-
-    public Note toEntity(NoteDTO dto, User user, Lesson lesson) {
+    public Note toEntity(NoteDTO dto, User user) {
         Note note = new Note();
         note.setNoteId(dto.getNoteId());
         note.setContent(dto.getContent());
         note.setUser(user);
-        note.setLesson(lesson);
         return note;
     }
 }
