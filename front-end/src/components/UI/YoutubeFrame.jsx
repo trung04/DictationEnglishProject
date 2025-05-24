@@ -129,7 +129,7 @@ const YoutubeFrame = ({ url, startTime, endTime }) => {
         onClick={handlePlayVideo}
         className="btn btn-primary bg-green-600  px-6 py-2 rounded hover:bg-green-700"
       >
-        Play {startTime} {endTime}
+        Play
       </button>
     </>
   );

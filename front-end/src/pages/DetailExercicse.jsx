@@ -63,6 +63,7 @@ const DetailExercise = ({ userData }) => {
   const [correctLength, setCorrectLength] = useState(0);
   const [hideUnreached, setHideUnreached] = useState(true);
   const [challenges, setChallenges] = useState([]);
+  const [translate, setTranslate] = useState([]);
 
   //thoi gian chinh sua video YoutubeFrame
   const [startTime, setStartTime] = useState(0);
@@ -130,6 +131,7 @@ const DetailExercise = ({ userData }) => {
     }
   }, [challengeId]);
   const handleChangeChallenge = async (status) => {
+    setHideUnreached(true);
     // Kiểm tra trạng thái và cập nhật challengeId
     let newChallengeId = challengeId;
     if (status == 0 && challengeId > 1) {
@@ -213,8 +215,10 @@ const DetailExercise = ({ userData }) => {
       .get(`http://localhost:8080/api/lessons/${id}`)
       .then((response) => {
         setLesson(response.data);
+
         console.log(response.data);
         setChallenges(JSON.parse(response.data.transcript));
+        setTranslate(JSON.parse(response.data.translate));
       })
       .catch((error) => {
         console.error("Lỗi khi lấy danh sách topics:", error);
@@ -453,7 +457,7 @@ const DetailExercise = ({ userData }) => {
                       )}
                     </div>
 
-                    <div className="result-section">
+                    {/* <div className="result-section">
                       {result && <h3>{result}!</h3>}
                       {result &&
                         challenges.find((ch) => ch.id == challengeId) && (
@@ -482,6 +486,74 @@ const DetailExercise = ({ userData }) => {
                             </p>
                           </div>
                         )}
+                    </div> */}
+                    <div className="result-section mt-4">
+                      {result && (
+                        <>
+                          <h3 className="text-success text-center mb-4">
+                            {result}!
+                          </h3>
+
+                          {challenges.find((ch) => ch.id == challengeId) && (
+                            <div className="container">
+                              <div className="form-check mb-3">
+                                <input
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  id="hideUnreachedCheckbox"
+                                  checked={hideUnreached}
+                                  onChange={(e) =>
+                                    setHideUnreached(e.target.checked)
+                                  }
+                                />
+                                <label
+                                  className="form-check-label"
+                                  htmlFor="hideUnreachedCheckbox"
+                                >
+                                  Ẩn các từ chưa nhập (hiển thị *)
+                                </label>
+                              </div>
+
+                              <div className="card shadow-sm border-0">
+                                <div className="card-body">
+                                  {/* <h5 className="card-title fw-bold mb-3 text-primary">
+                                    Bài làm của bạn
+                                  </h5> */}
+
+                                  <p
+                                    className="card-text text-break"
+                                    style={{ whiteSpace: "normal" }}
+                                  >
+                                    {renderTextWithErrors(
+                                      challenges.find(
+                                        (ch) => ch.id == challengeId
+                                      )?.text
+                                    )}
+                                  </p>
+                                  {result == "Correct" ? (
+                                    <>
+                                      <hr />
+
+                                      <h6 className="card-subtitle mb-2 text-muted">
+                                        Bản dịch
+                                      </h6>
+                                      <p className="card-text">
+                                        {
+                                          translate.find(
+                                            (ch) => ch.id == challengeId
+                                          )?.text
+                                        }
+                                      </p>
+                                    </>
+                                  ) : (
+                                    ""
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )}
                     </div>
                   </>
                 )}
