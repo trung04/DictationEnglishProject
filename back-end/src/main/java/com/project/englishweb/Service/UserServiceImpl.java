@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword())); // ✅ Mã hóa mật khẩu
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword())); //  Mã hóa mật khẩu
         user.setRole(userDTO.getRole());
 
         userRepository.save(user);
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userDTO.getEmail());
 
         if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(userDTO.getPassword())); // ✅ Mã hóa nếu có cập nhật
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword())); //  Mã hóa nếu có cập nhật
         }
         user.setRole(userDTO.getRole());  // Cập nhật role
         userRepository.save(user);

@@ -13,13 +13,13 @@
     <div class="container-fluid">
         <h2 class="mb-4">User Management</h2>
 
-        <!-- ✅ FORM TẠO / SỬA USER -->
+        <!--  FORM TẠO / SỬA USER -->
         <div class="card mb-4">
             <div class="card-header">
                 <h3 class="card-title" th:text="${userId != null} ? 'Update User' : 'Create New User'"></h3>
             </div>
             <div class="card-body">
-                <!-- ✅ Hiển thị lỗi -->
+                <!-- Hiển thị lỗi -->
                 <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
                 <form th:action="${userId != null} ? @{/admin/users/update/{id}(id=${userId})} : @{/admin/users}"
@@ -40,7 +40,7 @@
                                th:required="${userId == null}" />
                     </div>
 
-                    <!-- ✅ CHỌN ROLE -->
+                    <!-- CHỌN ROLE -->
                     <div class="form-group">
                         <label for="role">Role</label>
                         <select id="role" class="form-control" th:field="*{role}" required>
@@ -55,7 +55,7 @@
             </div>
         </div>
 
-        <!-- ✅ DANH SÁCH USER -->
+        <!-- DANH SÁCH USER -->
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">User List</h3>
@@ -92,7 +92,7 @@
                     </tbody>
                 </table>
 
-                <!-- ✅ PHÂN TRANG -->
+                <!-- PHÂN TRANG -->
                 <nav th:if="${totalPages > 1}">
                     <ul class="pagination">
                         <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
