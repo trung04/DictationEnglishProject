@@ -254,6 +254,7 @@ const Navbar = ({ userData }) => {
               ) : (
                 <>
                   <li>
+                    <a href="http://localhost:8080/">google</a>
                     <Link
                       to="/login"
                       className="  p-2  d-flex align-items-center border-0"
@@ -276,7 +277,11 @@ const Navbar = ({ userData }) => {
         </div>
       </nav>
       {showNotes && (
-        <NotePopup isOpen={showNotes} onClose={() => setShowNotes(false)} userData={userData} />
+        <NotePopup
+          isOpen={showNotes}
+          onClose={() => setShowNotes(false)}
+          userData={userData}
+        />
       )}
     </>
   );
