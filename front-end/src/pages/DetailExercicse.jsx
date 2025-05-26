@@ -6,6 +6,7 @@ import ToggleDownSimple from "../components/UI/ToggleDownSimple";
 import Input from "../components/UI/Input";
 import axios from "axios";
 import Comment from "./Comment";
+import useSpeechRecognition from "../hooks/useSpeechRecognition";
 // dữ liệu mẫu
 
 // Hàm so sánh văn bản và tìm các từ không khớp
@@ -70,6 +71,8 @@ const DetailExercise = ({ userData }) => {
   const [endTime, setEndTime] = useState(2);
 
   //end demo
+  const { text, isListening, startListening, stopListening, hasSpeechSupport } =
+    useSpeechRecognition();
 
   //hàm kiểm tra đáp án có trùng hay không
   const handleCheck = () => {
@@ -132,6 +135,7 @@ const DetailExercise = ({ userData }) => {
   }, [challengeId]);
   const handleChangeChallenge = async (status) => {
     setHideUnreached(true);
+    stopListening();
     // Kiểm tra trạng thái và cập nhật challengeId
     let newChallengeId = challengeId;
     if (status == 0 && challengeId > 1) {
@@ -530,7 +534,7 @@ const DetailExercise = ({ userData }) => {
                                       )?.text
                                     )}
                                   </p>
-                                  {result == "Correct" ? (
+                                  {result == "Correct" && translate ? (
                                     <>
                                       <hr />
 
@@ -539,7 +543,7 @@ const DetailExercise = ({ userData }) => {
                                       </h6>
                                       <p className="card-text">
                                         {
-                                          translate.find(
+                                          translate?.find(
                                             (ch) => ch.id == challengeId
                                           )?.text
                                         }

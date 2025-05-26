@@ -254,7 +254,6 @@ const Navbar = ({ userData }) => {
               ) : (
                 <>
                   <li>
-                    <a href="http://localhost:8080/">google</a>
                     <Link
                       to="/login"
                       className="  p-2  d-flex align-items-center border-0"
