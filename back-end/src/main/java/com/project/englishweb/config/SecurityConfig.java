@@ -21,17 +21,17 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeHttpRequests(auth -> auth
-//                        .anyRequest().permitAll() // Cho phép tất cả request mà không cần đăng nhập
-//                )
-//                .csrf(csrf -> csrf.disable())  // Tắt CSRF để tránh lỗi khi gửi POST request
-//                .formLogin(form -> form.disable()) // Tắt trang login
-//                .httpBasic(httpBasic -> httpBasic.disable()); // Tắt xác thực HTTP Basic
-//
-//        return http.build();
-//    }
+   @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+         http
+            .authorizeHttpRequests(auth -> auth
+                  .anyRequest().permitAll() 
+           )
+          .csrf(csrf -> csrf.disable())  
+         .formLogin(form -> form.disable()) 
+       .httpBasic(httpBasic -> httpBasic.disable()); 
+
+  return http.build();
+}
 
 }
