@@ -7,8 +7,11 @@
                 <img src="https://tse1.mm.bing.net/th?id=OIP.ZxrTKU2-mXGCnbsJfucRQgHaEK&pid=Api&P=0&h=180" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-                <p> Nguyễn Trung</p>
+                <p>UserName </p>
 <!--                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>-->
+            </div>
+            <div th:if="${user != null}">
+                Xin chào, <span th:text="${user.username}"></span>
             </div>
         </div>
         <!-- search form -->

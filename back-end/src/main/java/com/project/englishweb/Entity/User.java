@@ -25,6 +25,8 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Flashcard> flashcards;
 
     private int activeDays;
     private int activeHours;
@@ -73,5 +75,12 @@ public class User {
 
     public int getTotalSeconds() {
         return this.activeHours;
+    }
+    public List<Flashcard> getFlashcards() {
+        return flashcards;
+    }
+
+    public void setFlashcards(List<Flashcard> flashcards) {
+        this.flashcards = flashcards;
     }
 }

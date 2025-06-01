@@ -22,23 +22,36 @@ public class AdminController {
 
   
     @GetMapping("/index")
-    public String home(HttpSession session) {
+    public String home(HttpSession session, Model model) {
         User admin = (User) session.getAttribute("admin");
         if (admin == null || admin.getRole() != 1) {
             return "redirect:/login";
+        }
+        if (admin != null) {
+            model.addAttribute("user", admin);
         }
         return "index";
     }
 
 
     @GetMapping("/layout")
-    public String layout() {
+    public String layout(HttpSession session, Model model) {
+        User admin = (User) session.getAttribute("admin");
+        if (admin != null) {
+            model.addAttribute("user", admin);
+        }
         return "layout/layout";
     }
 
    
     @GetMapping("/login")
-    public String login(@RequestParam(value = "error", required = false) String error, Model model) {
+    public String login(HttpSession session,@RequestParam(value = "error", required = false) String error, Model model) {
+        User admin = (User) session.getAttribute("admin");
+        if(admin!=null && admin.getRole()==1) {
+            model.addAttribute("user", admin);
+
+            return "redirect:/index";
+        }
         if (error != null) {
             model.addAttribute("error", "Email hoặc mật khẩu không đúng.");
         }
