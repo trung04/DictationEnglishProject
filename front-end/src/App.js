@@ -19,6 +19,10 @@ import { Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import FinishTest from "./pages/FinishTest";
+import FlashCard from "./pages/Flashcard/FlashCard";
+import FlashCardList from "./pages/Flashcard/FlashCardList";
+import FlashCardDetail from "./pages/Flashcard/FlashCardDetail";
+import Practice from "./pages/Flashcard/Practice";
 
 function App() {
   const isLoggedIn = JSON.parse(localStorage.getItem("keepLoggedIn"));
@@ -28,10 +32,10 @@ function App() {
   useEffect(() => {
     // Lấy token từ localStorage
     const token = localStorage.getItem("token");
-    console.log(token);
 
     if (token) {
       // Nếu có token, gọi API để lấy thông tin người dùng
+      console.log(token);
       axios
         .get("http://localhost:8080/api/user/account-info", {
           headers: {
@@ -57,6 +61,14 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout userData={userData} />}>
+            <Route path="flashcard" element={<FlashCard userData={userData} />}>
+              <Route index element={<FlashCardList userData={userData} />} />{" "}
+              <Route
+                path=":id"
+                element={<FlashCardDetail userData={userData} />}
+              />{" "}
+              <Route path="practice/:id" element={<Practice />} />
+            </Route>
             <Route path="test-comment" element={<Comment />}></Route>
             <Route index element={<Home />} />
             <Route path="finish-test/:lessonId" element={<FinishTest />} />

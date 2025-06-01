@@ -118,6 +118,23 @@ const Navbar = ({ userData }) => {
             </span>
           </div>
           <div>
+            {userData && (
+              <>
+                <Link
+                  to="/flashcard"
+                  id="incomplete-lessons-toggle"
+                  className="nav-link d-flex align-items-center px-3 py-2 rounded "
+                  title="The exercises you have started but not finished"
+                  role="button"
+                >
+                  <i className="bi bi-journal-bookmark-fill me-2"></i>{" "}
+                  {/* icon Bootstrap */}
+                  <span className="d-none d-lg-inline ">Flash card</span>
+                </Link>
+              </>
+            )}
+          </div>
+          <div>
             <ul className="navbar-nav">
               {userData ? (
                 <>
