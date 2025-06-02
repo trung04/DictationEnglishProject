@@ -36,7 +36,6 @@ public class CommentApiSevice {
         comment.setSubmittedAt(LocalDateTime.now());
         comment.setLesson(lesson);
         comment.setUser(user);
-        comment.setQuestion(null);
         return commentRepository.save(comment);
     }
     public List<Comment> findAll(){
