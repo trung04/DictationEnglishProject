@@ -9,11 +9,7 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByQuestionQuestionId(Long questionId);
     List<Comment> findByUserUserId(Long userId);
-    List<Comment> findByQuestionQuestionIdOrderBySubmittedAtDesc(Long questionId);
-    List<Comment> findByQuestionQuestionIdOrderByLikeDesc(Long questionId);
-    List<Comment> findByQuestionQuestionIdOrderByDislikeDesc(Long questionId);
     Page<Comment> findAll(Pageable pageable);
 
 }
