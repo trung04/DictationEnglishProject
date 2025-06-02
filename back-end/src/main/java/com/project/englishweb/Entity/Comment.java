@@ -42,10 +42,7 @@ public class Comment {
 
     private Lesson lesson;
 
-    @ManyToOne
-    @JoinColumn(name = "questionId", nullable = true)
-//    @JsonIgnore
-    private Question question;
+
 
     public Long getCommentId() {
         return commentId;
@@ -103,12 +100,6 @@ public class Comment {
         this.lesson = lesson;
     }
 
-    public Question getQuestion() {
-        return question;
-    }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
 }
 
