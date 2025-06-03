@@ -32,7 +32,7 @@ const FlashCardList = ({ userData }) => {
         `http://localhost:8080/api/flashcards/user/${userId}`
       );
       setListFC(res.data);
-      console.log(res);
+      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -107,12 +107,11 @@ const FlashCardList = ({ userData }) => {
   };
 
   const handleDeleteFC = async (flashcardId) => {
-    alert(flashcardId);
     try {
       const res = await axios.delete(
         `http://localhost:8080/api/flashcards/${flashcardId}`
       );
-      await fetchFlashCard();
+      fetchFlashCard();
       setNotificaton("Deleted successfully !");
       setTimeout(() => {
         setNotificaton(null);

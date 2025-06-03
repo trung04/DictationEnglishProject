@@ -22,7 +22,7 @@ const ListTopic = () => {
 
       <div className="row center">
         {topics &&
-          topics.map((topic, index) => {
+          topics?.map((topic, index) => {
             return (
               <div className="col-lg-4 mb-4" key={index}>
                 <Card

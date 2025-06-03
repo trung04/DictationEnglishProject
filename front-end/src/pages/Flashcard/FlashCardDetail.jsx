@@ -66,7 +66,12 @@ function FlashCardDetail() {
         `http://localhost:8080/api/flashcard-details/create`,
         {
           ...data,
-          flashcardId: flashcard?.id,
+          flashcardId: id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
       reset();

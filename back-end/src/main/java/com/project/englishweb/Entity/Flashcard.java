@@ -24,7 +24,7 @@ public class Flashcard {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
-    @JsonIgnoreProperties({"flashcards", "comments","progresses"})
+    @JsonIgnoreProperties({"flashcards", "comments","progresses","notes"})
     private User user;
     @OneToMany(mappedBy = "flashcard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FlashcardDetail> details = new ArrayList<>();

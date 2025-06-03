@@ -14,7 +14,7 @@ const ListExercise = () => {
           `http://localhost:8080/api/topics/parentTopic/${id}`
         );
         const res2 = await axios.get(`http://localhost:8080/api/topics/${id}`);
-
+        console.log(res1.data);
         setTopics(res1.data);
         setParentTopic(res2.data);
       } catch (error) {
@@ -30,7 +30,11 @@ const ListExercise = () => {
       <Navbar2 parentTopic={parentTopic} />
       <div className="container-lg">
         <div className="mb-4">
-          <ToggleDown topics={topics} />
+          {topics && (
+            <>
+              <ToggleDown topics={topics} />
+            </>
+          )}
         </div>
       </div>
     </>
