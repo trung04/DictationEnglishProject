@@ -4,7 +4,7 @@ const ToggleDown = (props) => {
   return (
     <>
       {topics &&
-        topics.map((topic) => {
+        topics?.map((topic) => {
           return (
             <div className="accordion mb-3" key={topic.topicId}>
               <div className="accordion-item">

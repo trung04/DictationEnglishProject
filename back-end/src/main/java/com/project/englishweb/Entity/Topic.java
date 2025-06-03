@@ -1,5 +1,6 @@
 package com.project.englishweb.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,7 +38,7 @@ public class Topic {
     private String parentImagePath;
 
     @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnoreProperties({"topics", "comments","progresses","notes","transcript","translate"})
     private List<Lesson> lessons = new ArrayList<>();
 
 

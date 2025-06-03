@@ -30,7 +30,7 @@ public class AdminController {
         if (admin != null) {
             model.addAttribute("user", admin);
         }
-        return "index";
+        return "redirect:/lessons";
     }
 
 

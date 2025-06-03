@@ -228,9 +228,9 @@ const Comment = () => {
             </div>
           </div>
         ))}
-      {index < comments.length ? (
+      {index < comments?.length ? (
         <button
-          onClick={() => setIndex(comments.length)}
+          onClick={() => setIndex(comments?.length)}
           className="btn btn-sm btn-outline-secondary mt-2"
         >
           👁️ Xem thêm bình luận
