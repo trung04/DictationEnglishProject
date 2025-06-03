@@ -3,6 +3,7 @@ package com.project.englishweb.Controller;
 import com.project.englishweb.DTO.CommentDTO;
 import com.project.englishweb.Entity.Comment;
 import com.project.englishweb.Service.CommentService;
+import com.project.englishweb.Service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
 
     private final CommentService commentService ;
-
+    private final LessonService lessonService;
     @GetMapping
     public String manageComments(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(required = false) String action,
@@ -26,6 +27,7 @@ public class CommentController {
         if ("new".equals(action)) {
             model.addAttribute("commentDTO", new CommentDTO());
             model.addAttribute("action", "new");
+            model.addAttribute("lessons", lessonService.getAllLessons());
             model.addAttribute("activePage", "comments");
             return "comments/manage";
         }
@@ -34,11 +36,12 @@ public class CommentController {
             Comment comment = commentService.getCommentById(id);
             CommentDTO commentDTO = new CommentDTO();
             commentDTO.setContent(comment.getContent());
-            commentDTO.setQuestionId(comment.getQuestion().getQuestionId());
             commentDTO.setUserId(comment.getUser().getUserId());
             commentDTO.setLike(comment.getLike());
             commentDTO.setDislike(comment.getDislike());
+            commentDTO.setLessonId(comment.getLesson().getLessonId());
             model.addAttribute("commentDTO", commentDTO);
+            model.addAttribute("lessons", lessonService.getAllLessons());
             model.addAttribute("commentId", id);
             model.addAttribute("activePage", "comments");
             return "comments/manage";

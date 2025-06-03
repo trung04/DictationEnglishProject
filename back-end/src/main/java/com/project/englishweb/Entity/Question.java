@@ -26,8 +26,8 @@ public class Question {
     @JoinColumn(name = "lessonId", nullable = false)
     private Lesson lesson;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
+    // @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private List<Comment> comments;
     public String getUrl() {
         return url;
     }

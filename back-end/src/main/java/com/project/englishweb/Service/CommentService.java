@@ -13,9 +13,5 @@ public interface CommentService {
     Comment getCommentById(Long id);
     Comment updateComment(Long id, CommentDTO commentDTO);
     void deleteComment(Long id);
-    List<Comment> getCommentsByQuestionId(Long questionId);
     List<Comment> getCommentsByUserId(Long userId);
-    List<Comment> getCommentsByQuestionIdOrderBySubmittedAtDesc(Long questionId);
-    List<Comment> getCommentsByQuestionIdOrderByLikeDesc(Long questionId);
-    List<Comment> getCommentsByQuestionIdOrderByDislikeDesc(Long questionId);
 }

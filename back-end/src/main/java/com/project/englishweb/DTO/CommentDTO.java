@@ -15,7 +15,6 @@ public class CommentDTO {
     private LocalDateTime submittedAt;
     private Long userId;
     private Long lessonId;
-    private Long questionId;
     private Lesson lesson;
     private User user;
 
@@ -65,14 +64,6 @@ public class CommentDTO {
 
     public void setLessonId(Long lessonId) {
         this.lessonId = lessonId;
-    }
-
-    public Long getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(Long questionId) {
-        this.questionId = questionId;
     }
 
     public Lesson getLesson() {
