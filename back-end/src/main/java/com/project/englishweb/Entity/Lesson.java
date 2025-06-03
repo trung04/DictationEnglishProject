@@ -1,6 +1,7 @@
 package com.project.englishweb.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -52,7 +53,7 @@ public class Lesson {
     @Column(columnDefinition = "TEXT")
     private String translate;
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnoreProperties({"topics", "comments","progresses","notes","transcript","translate"})
     private List<Comment> comments;
 
 

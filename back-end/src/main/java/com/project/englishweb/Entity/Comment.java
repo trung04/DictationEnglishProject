@@ -27,7 +27,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    @JsonIgnoreProperties("comments")  // Bỏ qua thuộc tính comments của user khi serialize user trong comment
+    @JsonIgnoreProperties({"flashcards", "comments","progresses","notes"})  // Bỏ qua thuộc tính comments của user khi serialize user trong comment
     private User user;
 
     @ManyToOne
