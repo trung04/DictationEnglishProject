@@ -22,12 +22,6 @@ public class Comment {
     @Column(nullable = false)
     private String content;
 
-    @Column(name = "`like`")
-    private int like;
-
-    @Column(name = "`dislike`")
-    private int dislike;
-
     @Column(nullable = false)
     private LocalDateTime submittedAt;
 
@@ -58,22 +52,6 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public int getLike() {
-        return like;
-    }
-
-    public void setLike(int like) {
-        this.like = like;
-    }
-
-    public int getDislike() {
-        return dislike;
-    }
-
-    public void setDislike(int dislike) {
-        this.dislike = dislike;
     }
 
     public LocalDateTime getSubmittedAt() {

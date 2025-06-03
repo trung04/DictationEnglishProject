@@ -10,22 +10,11 @@ import java.time.LocalDateTime;
 @Setter
 public class CommentDTO {
     private String content;
-    private int like;
-    private int dislike;
     private LocalDateTime submittedAt;
     private Long userId;
     private Long lessonId;
     private Lesson lesson;
     private User user;
-
-    public int getLike() {
-        return like;
-    }
-
-    public void setLike(int like) {
-        this.like = like;
-    }
-
     public String getContent() {
         return content;
     }
@@ -34,13 +23,6 @@ public class CommentDTO {
         this.content = content;
     }
 
-    public int getDislike() {
-        return dislike;
-    }
-
-    public void setDislike(int dislike) {
-        this.dislike = dislike;
-    }
 
     public LocalDateTime getSubmittedAt() {
         return submittedAt;

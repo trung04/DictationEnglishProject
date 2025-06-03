@@ -31,8 +31,6 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new NoSuchElementException("Lesson not found"));
         Comment comment = new Comment();
         comment.setContent(commentDTO.getContent());
-        comment.setLike(commentDTO.getLike());
-        comment.setDislike(commentDTO.getDislike());
         comment.setSubmittedAt(LocalDateTime.now());
         comment.setUser(user);
         comment.setLesson(lesson);
@@ -52,10 +50,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment updateComment(Long id, CommentDTO commentDTO) {
+        User user = userRepository.findById(commentDTO.getUserId())
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+        Lesson lesson = lessonRepository.findById(commentDTO.getLessonId())
+                .orElseThrow(() -> new NoSuchElementException("Lesson not found"));
         Comment comment = getCommentById(id);
         comment.setContent(commentDTO.getContent());
-        comment.setLike(commentDTO.getLike());
-        comment.setDislike(commentDTO.getDislike());
+        comment.setUser(user);
+        comment.setLesson(lesson);
         return commentRepository.save(comment);
     }
 
