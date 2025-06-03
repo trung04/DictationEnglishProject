@@ -31,8 +31,6 @@ public class CommentApiSevice {
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
         Comment comment = new Comment();
         comment.setContent(commentDTO.getContent());
-        comment.setLike(commentDTO.getLike());
-        comment.setDislike(commentDTO.getDislike());
         comment.setSubmittedAt(LocalDateTime.now());
         comment.setLesson(lesson);
         comment.setUser(user);
