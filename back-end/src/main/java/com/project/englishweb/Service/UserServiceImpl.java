@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
+    public List<User> getAllUsers(){ return userRepository.findAll();}
 
     @Override
     public void createUser(UserDTO userDTO) {
