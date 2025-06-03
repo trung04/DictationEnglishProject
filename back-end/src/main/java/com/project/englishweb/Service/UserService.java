@@ -15,4 +15,6 @@ public interface UserService {
     void deleteUser(Long id);
     public int addTime(Long id,int second);
     public long getTime(Long id);
+    List<User> getAllUsers();
+
 }
