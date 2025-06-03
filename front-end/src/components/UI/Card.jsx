@@ -24,7 +24,7 @@ const Card = (props) => {
               </h2>
               <div>
                 {/* <span className="text-muted">Levels:{props.level}</span> */}
-                {props?.detail}
+                {/* {props?.detail} */}
               </div>
               <div className="text-muted d-flex align-items-center">
                 <i className="me-1 bi bi-soundwave opacity-75"></i>
